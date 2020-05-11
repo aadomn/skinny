@@ -1,24 +1,19 @@
 # Efficient bitsliced implementations of SKINNY-128 tweakable block ciphers
 
-SKINNY is a tweakable block cipher family that operates either on 64-bit or 128-bit blocks. For more information on SKINNY, see: https://sites.google.com/site/skinnycipher/. It has been used in used in several [NIST LWC competition](https://csrc.nist.gov/projects/lightweight-cryptography) candidates, including Romulus and SKINNY-AEAD.
+SKINNY is a tweakable block cipher family that operates either on 64-bit or 128-bit blocks. For more information on SKINNY, see: https://sites.google.com/site/skinnycipher/. It has been used in used in several [NIST LWC competition](https://csrc.nist.gov/projects/lightweight-cryptography) candidates, including [Romulus](https://romulusae.github.io/romulus) and [SKINNY-AEAD](https://sites.google.com/site/skinnycipher/nist-lwc-submission/skinny).
 
-Romulus consists of two families of authenticated encryption algorithms, a nonce-based and a nonce misuse-
-resistant one, namely Romulus-N and Romulus-M. The primary members of each family are the Romulus-N1 and Romulus-M1 (each composed of 56 rounds), with Romulus-N1+ and Romulus-M1+ referring to 40-round variants. For more details on Romulus, see: https://romulusae.github.io/romulus/.
+This repository contains efficient bitsliced implementations of SKINNY-128 on 32-bit platforms. More precisely, it provides:
+- `crypto_bc/skinny128/1_block`:  version that processes a single block a time
+- `crypto_bc/skinny128/2_blocks`: version that processes two blocks in parallel.
 
-SKINNY-AEAD is a family of authenticated encryption algorithms witg SKINNY-AEAD-M1 being its primary member, with SKINN-AEAD-M1+ referring to a 40-round variant. For more details on SKINNY-AEAD, see: https://sites.google.com/site/skinnycipher/nist-lwc-submission/skinny.
+It also provides implementations of the following variants of Romulus and SKINNY-AEAD:
 
-This repository contains efficient bitsliced implementations of SKINNY-128 on 32-bit platforms. More precisely, it provides two versions:
-- `crypto_bc/skinny128/1_block`:  a single block is processed at a time
-- `crypto_bc/skinny128/2_blocks`: two blocks are processed in parallel.
-
-It also provides implementations of Romulus and SKINNY-AEAD:
-
-- `crypto_aead/romulusn1v12`:     Romulus-N1 v1.2
-- `crypto_aead/romulusn1+v12`:    Romulus-N1+ v1.2
-- `crypto_aead/romulusm1v12`:     Romulus-M1 v1.2
-- `crypto_aead/romulusm1+v12`:    Romulus-M1+ v1.2
-- `crypto_aead/skinnyaeadm1v11`:  SKINNY-AEAD-M1 v1.1
-- `crypto_aead/skinnyaeadm1+v11`: SKINNY-AEAD-M1+ v1.1.
+- `crypto_aead/romulusn1v12`
+- `crypto_aead/romulusn1+v12`
+- `crypto_aead/romulusm1v12`
+- `crypto_aead/romulusm1+v12`
+- `crypto_aead/skinnyaeadm1v11`
+- `crypto_aead/skinnyaeadm1+v11`.
 
 For each algorithm, one can find:
 
