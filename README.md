@@ -2,9 +2,9 @@
 
 SKINNY is a tweakable block cipher family that operates either on 64-bit or 128-bit blocks. For more information on SKINNY, see: https://sites.google.com/site/skinnycipher/. It has been used in used in several [NIST LWC competition](https://csrc.nist.gov/projects/lightweight-cryptography) candidates, including [Romulus](https://romulusae.github.io/romulus) and [SKINNY-AEAD](https://sites.google.com/site/skinnycipher/nist-lwc-submission/skinny).
 
-This repository contains efficient bitsliced implementations of SKINNY-128 on 32-bit platforms. More precisely, it provides:
-- `crypto_bc/skinny128/1_block`:  version that processes a single block a time
-- `crypto_bc/skinny128/2_blocks`: version that processes two blocks in parallel.
+This repository contains efficient bitsliced implementations of SKINNY-128 on 32-bit platforms. More precisely, it provides two versions:
+- `crypto_bc/skinny128/1_block`:  a single block is processed a time
+- `crypto_bc/skinny128/2_blocks`: two blocks are processed in parallel.
 
 It also provides implementations of the following variants of Romulus and SKINNY-AEAD:
 
