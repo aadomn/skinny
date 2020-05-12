@@ -3381,14 +3381,14 @@ skinny128_384:
 	add.w 	sp, #12
 	stm 	r0, {r5, r7, r9, r11} 	// store the 1st enc block in [r0]
 	stm 	r1, {r6, r8, r10, r12} 	// store the 2nd enc block in [r1]
-    pop 	{r2-r12,r14}
+    pop 	{r2-r12, r14}
     bx 		lr
 
 /******************************************************************************
 * Compute the SKINNY block cipher on a single block in a fixsliced manner.
 ******************************************************************************/
-@ void skinny128_384_inv(u8* ctext, u8* ctext_bis, const u8* ptext,
-@	const u8* ptext_bis,  const u32* rtk_1, const u32* rtk_2_3)
+@ void skinny128_384_inv(u8* ptext, u8* ptext_bis, const u8* ctext,
+@	const u8* ctext_bis,  const u32* rtk_1, const u32* rtk_2_3)
 .global skinny128_384_inv
 .type   skinny128_384_inv,%function
 .align 2
@@ -3404,7 +3404,7 @@ skinny128_384_inv:
 	bl 		packing
 	ldrd 	r0, r1, [sp, #60] 		// get rtk addr (1st stack argument)
 	add.w 	r0, #248 				// points to the last rtk1
-	add.w 	r1, #1784 				// points to the last rtk2_3
+	add.w 	r1, #1272 				// points to the last rtk2_3
 	bl 		inv_quadruple_round
 	bl 		inv_quadruple_round
 	add.w 	r0, #512
@@ -3418,6 +3418,7 @@ skinny128_384_inv:
 	bl 		inv_quadruple_round
 	bl 		inv_quadruple_round
 	bl 		unpacking
+	ldrd 	r0, r1, [sp, #4]
 	add.w 	sp, #12
 	stm 	r0, {r5, r7, r9, r11} 	// store the 1st enc block in [r0]
 	stm 	r1, {r6, r8, r10, r12} 	// store the 2nd enc block in [r1]

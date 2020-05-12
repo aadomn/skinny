@@ -4,8 +4,6 @@
 typedef unsigned char u8;
 typedef unsigned int u32;
 
-#define SKINNY128_128_ROUNDS	40
-#define SKINNY128_256_ROUNDS	48
 #define SKINNY128_384_ROUNDS	56
 
 extern void skinny128_384(u8* ctext, u8* ctext_bis, const u8* ptext, const u8* ptext_bis, const u32* rtk1, const u32* rtk2_3);
