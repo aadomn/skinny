@@ -40,7 +40,7 @@ void mixcolumns_0(u32* state) {
 }
 
 /******************************************************************************
-* The MixColumns operation for rounds i such that (i % 4) == 0
+* The MixColumns operation for rounds i such that (i % 4) == 1
 ******************************************************************************/
 void mixcolumns_1(u32* state) {
 	u32 tmp;
@@ -55,7 +55,7 @@ void mixcolumns_1(u32* state) {
 }
 
 /******************************************************************************
-* The MixColumns operation for rounds i such that (i % 4) == 0
+* The MixColumns operation for rounds i such that (i % 4) == 2
 ******************************************************************************/
 void mixcolumns_2(u32* state) {
 	u32 tmp;
@@ -70,7 +70,7 @@ void mixcolumns_2(u32* state) {
 }
 
 /******************************************************************************
-* The MixColumns operation for rounds i such that (i % 4) == 0
+* The MixColumns operation for rounds i such that (i % 4) == 3
 ******************************************************************************/
 void mixcolumns_3(u32* state) {
 	u32 tmp;
@@ -100,7 +100,7 @@ void inv_mixcolumns_0(u32* state) {
 }
 
 /******************************************************************************
-* The inverse MixColumns operation for rounds i such that (i % 4) == 0
+* The inverse MixColumns operation for rounds i such that (i % 4) == 1
 ******************************************************************************/
 void inv_mixcolumns_1(u32* state) {
 	u32 tmp;
@@ -115,7 +115,7 @@ void inv_mixcolumns_1(u32* state) {
 }
 
 /******************************************************************************
-* The inverse MixColumns operation for rounds i such that (i % 4) == 0
+* The inverse MixColumns operation for rounds i such that (i % 4) == 2
 ******************************************************************************/
 void inv_mixcolumns_2(u32* state) {
 	u32 tmp;
@@ -130,7 +130,7 @@ void inv_mixcolumns_2(u32* state) {
 }
 
 /******************************************************************************
-* The inverse MixColumns operation for rounds i such that (i % 4) == 0
+* The inverse MixColumns operation for rounds i such that (i % 4) == 3
 ******************************************************************************/
 void inv_mixcolumns_3(u32* state) {
 	u32 tmp;
