@@ -408,7 +408,7 @@ unpacking:
 	eor 	r10, r3, r3, lsr #3
 	and 	r10, r10, r6
 	eor 	r3, r3, r10
-	eor 	r3, r3, r10, lsl #3 		//SWAPMOVE(r3, r3, 0x0a0a0a0a, 3)
+	eor 	r3, r3, r10, lsl #3 	//SWAPMOVE(r3, r3, 0x0a0a0a0a, 3)
 	eor 	r10, r2, r2, lsr #3
 	and 	r10, r10, r6
 	eor 	r2, r2, r10
@@ -1196,8 +1196,8 @@ tkschedule_perm:
 	strd 	r6, r7, [r0], #8 			//store 2nd half tk for 39th round
 	ldm 	r0, {r6-r9} 				//load tk
 	bl 		p8 							//apply the permutation 8 times
-	movw 	r10, #0x30
-	movt 	r10, #0x30 					//r10<- 0x30303030
+	movw 	r10, #0x3030
+	movt 	r10, #0x3030 				//r10<- 0x30303030
 	and 	r11, r10, r6, ror #30 		//--- ror and masks to match fixslicing
 	and 	r6, r6, r10, ror #4
 	orr 	r6, r11, r6, ror #22
@@ -1215,8 +1215,8 @@ tkschedule_perm:
 	eor 	r8, r8, #0x00000010
 	eor 	r9, r9, #0x00000400
 	mvn 	r9, r9 						//to save a NOT in sbox calculations
-	strd 	r6, r7, [r0], #8 			//store 1st half tk for 40th round
-	strd 	r8, r9, [r0] 				//store 2nd half tk for 40th round
+	strd 	r6, r7, [r0], #8 			//store 1st half tk for 39th round
+	strd 	r8, r9, [r0] 				//store 2nd half tk for 39th round
 	add.w 	sp, #4 						//restore stack pointer
 	pop 	{r0-r12, lr}
 	bx 		lr
@@ -1312,7 +1312,7 @@ tkschedule_perm_tk1:
 	str.w 	r12, [r0], #4
 	and 	r11, r3, r9, ror #14
 	and 	r12, r9, r3, ror #4
-	orr 	r12, r11, r12, ror #6			//ror and masks to match fixslicing ---
+	orr 	r12, r11, r12, ror #6		//ror and masks to match fixslicing ---
 	str.w 	r12, [r0], #4
 	and 	r11, r2, r6, ror #16 		//ror and mask to match fixslicing
 	and 	r12, r2, r7, ror #16 		//ror and mask to match fixslicing
@@ -2053,7 +2053,7 @@ inv_quadruple_round:
 	bx 		lr
 
 /******************************************************************************
-* Encrypt a single block using fixsliced SKINNY-128-128.
+* Encrypt a single block using fixsliced SKINNY-128-384+.
 ******************************************************************************/
 @ void skinny128_384(u8* ctext, const u32* tk, const u8* ptext, const u32* rtk1)
 .global skinny128_384
@@ -2094,7 +2094,7 @@ skinny128_384:
     bx 		lr   
 
 /******************************************************************************
-* Decrypt a single block using fixsliced SKINNY-128-128.
+* Decrypt a single block using fixsliced SKINNY-128-384+.
 ******************************************************************************/
 @ void skinny128_384_inv(u8* ctext, const u32* tk, const u8* ptext, const u32* rtk1)
 .global skinny128_384_inv
