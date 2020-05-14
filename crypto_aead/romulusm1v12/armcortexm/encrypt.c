@@ -108,11 +108,10 @@ int crypto_aead_encrypt
             tkschedule_perm(tks.rtk);
             tkschedule_perm_tk1(tks.rtk1, tks.tk1);
             skinny128_384(state, tks.rtk, state, tks.rtk1);
+            if (tmp_mlen > BLOCKBYTES)
+                UPDATE_CTR(tks.tk1);
             m_auth += BLOCKBYTES;
             tmp_mlen -= BLOCKBYTES;
-            if (tmp_mlen > BLOCKBYTES) {
-                UPDATE_CTR(tks.tk1);
-            }
         } else {
             memcpy(pad, m_auth, tmp_mlen);
             memset(pad + tmp_mlen, 0x00, BLOCKBYTES - tmp_mlen - 1);
@@ -310,11 +309,10 @@ int crypto_aead_decrypt
             tkschedule_perm(tks.rtk);
             tkschedule_perm_tk1(tks.rtk1, tks.tk1);
             skinny128_384(state, tks.rtk, state, tks.rtk1);
+            if (clen > BLOCKBYTES)
+                UPDATE_CTR(tks.tk1);
             m_auth += BLOCKBYTES;
             clen -= BLOCKBYTES;
-            if (clen > BLOCKBYTES) {
-                UPDATE_CTR(tks.tk1);
-            }
         } else {
             memcpy(pad, m_auth, clen);
             memset(pad + clen, 0x00, BLOCKBYTES - clen - 1);
