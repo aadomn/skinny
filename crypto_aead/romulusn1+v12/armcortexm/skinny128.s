@@ -1202,7 +1202,7 @@ tkschedule_perm_tk1:
 	strd 	r11, r12, [r0], #8 			//store 1st half tk for 1st round
 	and 	r11, r6, r2 				//tk &= 0xf0f0f0f0 (1st word)
 	and 	r12, r7, r2 				//tk &= 0xf0f0f0f0 (2nd word)
-	strd 	r11, r12, [r0], #8  			//store 2nd half tk for 1st round
+	strd 	r11, r12, [r0], #8  		//store 2nd half tk for 1st round
 
 	bl 		p2 							//apply the permutation twice
 	movw 	r3, #0x0303
@@ -1585,7 +1585,7 @@ quadruple_round:
 	bx 		lr
 
 /******************************************************************************
-* Encrypt a single block using fixsliced SKINNY-128-128.
+* Encrypt a single block using fixsliced SKINNY-128-384+.
 ******************************************************************************/
 @ void 	skinny128_384(u8* ctext, const u32* tk, const u8* ptext)
 .global skinny128_384
@@ -1693,7 +1693,7 @@ skinny128_384:
 	eor 	r10, r3, r3, lsr #3
 	and 	r10, r10, r6
 	eor 	r3, r3, r10
-	eor 	r3, r3, r10, lsl #3 		//SWAPMOVE(r3, r3, 0x0a0a0a0a, 3)
+	eor 	r3, r3, r10, lsl #3 	//SWAPMOVE(r3, r3, 0x0a0a0a0a, 3)
 	eor 	r10, r2, r2, lsr #3
 	and 	r10, r10, r6
 	eor 	r2, r2, r10
