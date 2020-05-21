@@ -75,12 +75,6 @@ int crypto_aead_encrypt (unsigned char *c, unsigned long long *clen,
     }
     LE_STR_64(tmp, lfsr);               // lfsr for tag computation                                  
     precompute_rtk1(rtk1, tmp);
-    for(int i = 0; i < 16; i++) {
-        printf("%08x %08x %08x %08x\n",rtk1[i*4], rtk1[i*4+1],rtk1[i*4+2],rtk1[i*4+3]);
-    }
-    for(int i = 0; i < 56; i++) {
-        printf("%08x %08x %08x %08x\n",rtk2_3[i*4], rtk2_3[i*4+1],rtk2_3[i*4+2],rtk2_3[i*4+3]);
-    }
     skinny128_384_encrypt(c, c, rtk1, rtk2_3); // compute the tag
     // ----------------- Process the plaintext -----------------
 
