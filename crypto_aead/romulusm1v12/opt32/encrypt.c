@@ -66,7 +66,7 @@ int crypto_aead_encrypt
     while (adlen > 2*BLOCKBYTES) {          // Process double blocks but the last
         UPDATE_CTR(tks.tk1);
         XOR_BLOCK(state, state, ad);
-        precompute_rtk2_3(tks.rtk2_3, npub, k);
+        precompute_rtk2_3(tks.rtk2_3, ad + BLOCKBYTES, k);
         precompute_rtk1(tks.rtk1, tks.tk1);
         skinny128_384(state, state, tks.rtk1, tks.rtk2_3); 
         UPDATE_CTR(tks.tk1);
