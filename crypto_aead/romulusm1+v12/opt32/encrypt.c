@@ -1,3 +1,13 @@
+/******************************************************************************
+* Constant-time implementation of Romulus-M1+ (v1.2).
+*
+* For more details, see the paper at: https://
+*
+* @author   Alexandre Adomnicai, Nanyang Technological University,
+*           alexandre.adomnicai@ntu.edu.sg
+*
+* @date     May 2020
+******************************************************************************/
 #include "skinny128.h"
 #include "tk_schedule.h"
 #include "romulus.h"
@@ -44,7 +54,6 @@ int crypto_aead_encrypt
      const unsigned char *nsec,
      const unsigned char *npub,
      const unsigned char *k) {
-
     u32 tmp;
     u64 tmp_mlen = mlen;
     const u8* m_auth = m;
@@ -164,12 +173,10 @@ int crypto_aead_encrypt
     skinny128_384_plus(state, state, tks.rtk1, tks.rtk2_3); 
     // ----------------- Process the associated data -----------------
 
-
     // ----------------- Generate the tag -----------------
     G(state,state);
     memcpy(c + mlen, state, TAGBYTES);
     // ----------------- Generate the tag -----------------
-
     memset(tks.tk1, 0x00, KEYBYTES);
     tks.tk1[0] = 0x01;                      // Init the 56-bit LFSR counter
     if (mlen > 0) {
@@ -192,7 +199,6 @@ int crypto_aead_encrypt
         }
         state[15] ^= (u8)mlen;              // Padding
     }
-
     return 0;
 }
 
@@ -204,7 +210,6 @@ int crypto_aead_decrypt
      const unsigned char *ad, unsigned long long adlen,
      const unsigned char *npub,
      const unsigned char *k) {
-
     u32 tmp;
     u64 tmp_mlen;
     u8 final_domain = 0x30;
@@ -362,6 +367,5 @@ int crypto_aead_decrypt
     for(int i = 0; i < TAGBYTES; i++)
         tmp |= state[i] ^ c_tmp[*mlen+i];   //constant-time tag comparison
     // ----------------- Generate and check the tag -----------------
-
     return tmp;
 }
