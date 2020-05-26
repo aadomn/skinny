@@ -33,13 +33,13 @@ static void skinny_aead_m1_auth(u8* auth, u8* c, u8* tag, tweakey* tk,
     u8 feedback;
     u8 tmp[2*BLOCKBYTES];
     memset(tmp, 0x00, 2*BLOCKBYTES);
-    memset(auth, 0x00, BLOCKBYTES);
     SET_DOMAIN(tmp, 0x02);
+    SET_DOMAIN(tmp + BLOCKBYTES, 0x02);
+    memset(auth, 0x00, BLOCKBYTES);
     while (adlen >= 2*BLOCKBYTES) {
         LE_STR_64(tmp, lfsr);
         UPDATE_LFSR(lfsr);
         LE_STR_64(tmp + BLOCKBYTES, lfsr);
-        SET_DOMAIN(tmp + BLOCKBYTES, 0x02);
         precompute_rtk1(tk->rtk1, tmp, tmp+BLOCKBYTES);
         skinny128_384_encrypt(tmp, tmp+BLOCKBYTES, ad, ad+BLOCKBYTES, *tk);
         xor_block(auth, tmp);
@@ -47,6 +47,9 @@ static void skinny_aead_m1_auth(u8* auth, u8* c, u8* tag, tweakey* tk,
         adlen -= 2*BLOCKBYTES;
         ad += 2*BLOCKBYTES;
         UPDATE_LFSR(lfsr);
+        memset(tmp, 0x00, 2*BLOCKBYTES);    // to save 32 bytes of RAM
+        SET_DOMAIN(tmp, 0x02);
+        SET_DOMAIN(tmp + BLOCKBYTES, 0x02);
     }
     if (adlen > BLOCKBYTES) {               // pad and process 2 blocs in //
         LE_STR_64(tmp, lfsr);
@@ -65,11 +68,12 @@ static void skinny_aead_m1_auth(u8* auth, u8* c, u8* tag, tweakey* tk,
         LE_STR_64(tmp, lfsr);
         if (mlen == 0) {    // if tag has *NOT* been calculated yet
             precompute_rtk1(tk->rtk1, tmp, tag);    // compute the tag
-            skinny128_384_encrypt(auth, c, ad, c, *tk); 
+            skinny128_384_encrypt(tmp, c, ad, c, *tk); 
         } else {            // if tag has  been calculated yet
             precompute_rtk1(tk->rtk1, tmp, tmp);    // process last ad block
-            skinny128_384_encrypt(auth, auth, ad, ad, *tk);
+            skinny128_384_encrypt(tmp, tmp, ad, ad, *tk);
         }
+        xor_block(auth, tmp);
     } else if (adlen > 0) {
         LE_STR_64(tmp, lfsr);
         SET_DOMAIN(tmp, 0x03);                      // domain for padding ad
@@ -78,11 +82,12 @@ static void skinny_aead_m1_auth(u8* auth, u8* c, u8* tag, tweakey* tk,
         tmp[BLOCKBYTES + adlen] ^= 0x80;            // padding
         if (mlen == 0) {    // if tag has *NOT* been calculated yet
             precompute_rtk1(tk->rtk1, tmp, tag);    // compute the tag
-            skinny128_384_encrypt(auth, c, tmp + BLOCKBYTES, c, *tk); 
+            skinny128_384_encrypt(tmp, c, tmp + BLOCKBYTES, c, *tk); 
         } else {            // if tag has been calculated yet
             precompute_rtk1(tk->rtk1, tmp,  tmp);   // process last ad block
-            skinny128_384_encrypt(auth, auth, tmp + BLOCKBYTES, tmp + BLOCKBYTES, *tk);
+            skinny128_384_encrypt(tmp, tmp, tmp + BLOCKBYTES, tmp + BLOCKBYTES, *tk);
         }
+        xor_block(auth, tmp);
     }
 }
 
