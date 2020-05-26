@@ -48,7 +48,6 @@ static void skinny_aead_m1_auth(u8* auth, u8* c, u8* tag, u32* rtk1,
         ad += 2*BLOCKBYTES;
         UPDATE_LFSR(lfsr);
         memset(tmp, 0x00, 2*BLOCKBYTES);
-        memset(auth, 0x00, BLOCKBYTES);
         SET_DOMAIN(tmp, 0x02);
         SET_DOMAIN(tmp + BLOCKBYTES, 0x02);
     }
