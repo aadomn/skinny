@@ -35,11 +35,11 @@ static void skinny_aead_m1_auth(u8* auth, u8* c, u8* tag, u32* rtk1,
     memset(tmp, 0x00, 2*BLOCKBYTES);
     memset(auth, 0x00, BLOCKBYTES);
     SET_DOMAIN(tmp, 0x02);
+    SET_DOMAIN(tmp + BLOCKBYTES, 0x02);
     while (adlen >= 2*BLOCKBYTES) {
         LE_STR_64(tmp, lfsr);
         UPDATE_LFSR(lfsr);
         LE_STR_64(tmp + BLOCKBYTES, lfsr);
-        SET_DOMAIN(tmp + BLOCKBYTES, 0x02);
         tkschedule_perm_tk1(rtk1, tmp, tmp+BLOCKBYTES);
         skinny128_384(tmp, tmp+BLOCKBYTES, ad, ad+BLOCKBYTES, rtk1, rtk2_3);
         xor_block(auth, tmp);
@@ -47,6 +47,10 @@ static void skinny_aead_m1_auth(u8* auth, u8* c, u8* tag, u32* rtk1,
         adlen -= 2*BLOCKBYTES;
         ad += 2*BLOCKBYTES;
         UPDATE_LFSR(lfsr);
+        memset(tmp, 0x00, 2*BLOCKBYTES);
+        memset(auth, 0x00, BLOCKBYTES);
+        SET_DOMAIN(tmp, 0x02);
+        SET_DOMAIN(tmp + BLOCKBYTES, 0x02);
     }
     if (adlen > BLOCKBYTES) {                       // pad and process 2 blocs
         LE_STR_64(tmp, lfsr);
@@ -65,11 +69,12 @@ static void skinny_aead_m1_auth(u8* auth, u8* c, u8* tag, u32* rtk1,
         LE_STR_64(tmp, lfsr);
         if (mlen == 0) {                // if tag has *NOT* been calculated yet
             tkschedule_perm_tk1(rtk1, tmp, tag);
-            skinny128_384(auth, c, ad, c, rtk1, rtk2_3); 
+            skinny128_384(tmp, c, ad, c, rtk1, rtk2_3); 
         } else {                        // if tag has  been calculated yet
             tkschedule_perm_tk1(rtk1, tmp, tmp);    // process last ad block
-            skinny128_384(auth, auth, ad, ad, rtk1, rtk2_3);
+            skinny128_384(tmp, tmp, ad, ad, rtk1, rtk2_3);
         }
+        xor_block(auth, tmp);
     } else if (adlen > 0) {
         LE_STR_64(tmp, lfsr);
         SET_DOMAIN(tmp, 0x03);                      // domain for padding ad
@@ -78,11 +83,12 @@ static void skinny_aead_m1_auth(u8* auth, u8* c, u8* tag, u32* rtk1,
         tmp[BLOCKBYTES + adlen] ^= 0x80;            // padding
         if (mlen == 0) {                // if tag has *NOT* been calculated yet
             tkschedule_perm_tk1(rtk1, tmp, tag);    // compute the tag
-            skinny128_384(auth, c, tmp + BLOCKBYTES, c, rtk1, rtk2_3); 
+            skinny128_384(tmp, c, tmp + BLOCKBYTES, c, rtk1, rtk2_3); 
         } else {                        // if tag has been calculated yet
             tkschedule_perm_tk1(rtk1, tmp,  tmp);   // process last ad block
-            skinny128_384(auth, auth, tmp + BLOCKBYTES, tmp + BLOCKBYTES, rtk1, rtk2_3);
+            skinny128_384(tmp, tmp, tmp + BLOCKBYTES, tmp + BLOCKBYTES, rtk1, rtk2_3);
         }
+        xor_block(auth, tmp);
     }
 }
 
@@ -184,10 +190,8 @@ int crypto_aead_encrypt (unsigned char *c, unsigned long long *clen,
     xor_block(sum, auth);
     memcpy(c, sum, TAGBYTES);
     // ----------------- Process the associated data -----------------
-
     return 0;
 }
-
 
 /******************************************************************************
 * Decryption and authentication using SKINNY-AEAD-M1
