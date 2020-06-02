@@ -8,10 +8,10 @@ This repository contains efficient bitsliced implementations of SKINNY-128 on 32
 
 It also provides implementations of the following variants of Romulus and SKINNY-AEAD:
 
-- `crypto_aead/romulusn1v12`
-- `crypto_aead/romulusn1+v12`
-- `crypto_aead/romulusm1v12`
-- `crypto_aead/romulusm1+v12`
+- `crypto_aead/romulusn1v1`
+- `crypto_aead/romulusn1+v1`
+- `crypto_aead/romulusm1v1`
+- `crypto_aead/romulusm1+v1`
 - `crypto_aead/skinnyaeadm1v11`
 - `crypto_aead/skinnyaeadm1+v11`.
 

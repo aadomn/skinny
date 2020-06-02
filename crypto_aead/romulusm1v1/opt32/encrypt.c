@@ -1,5 +1,5 @@
 /******************************************************************************
-* Constant-time implementation of Romulus-M1 (v1.2)
+* Constant-time implementation of Romulus-M1
 *
 * For more details, see the paper at: https://
 *
