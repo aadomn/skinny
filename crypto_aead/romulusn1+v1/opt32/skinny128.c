@@ -21,7 +21,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "skinny128.h"
-#include "tk_schedule.h"
 
 /******************************************************************************
 * The MixColumns computation for rounds i such that (i % 4) == 0

@@ -6,13 +6,8 @@
 *
 * @date		June 2020
 ******************************************************************************/
-#include <stdio.h>
 #include <string.h>
-#include "tk_schedule.h"
 #include "skinny128.h"
-
-typedef unsigned char u8;
-typedef unsigned int u32;
 
 /******************************************************************************
 * The round constants according to the new representation.
@@ -291,7 +286,7 @@ void precompute_lfsr_tk3(u32* tk, const u8* key, const int rounds) {
 * at the cost of some cycles (~260 on ARM Cortex-M).
 ******************************************************************************/
 void precompute_lfsr_tk2_3(u32* tk, const u8* t2, const u8* t3, const int rounds) {
-	u32 tmp, tk2[4], tk3[4];
+	u32 tk2[4], tk3[4];
 	packing(tk2, t2);
 	packing(tk3, t3);
 	tk[0] = tk2[0] ^ tk3[0];

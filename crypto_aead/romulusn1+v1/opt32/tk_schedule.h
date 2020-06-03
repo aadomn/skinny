@@ -1,8 +1,10 @@
 #ifndef TK_SCHEDULE_H_
 #define TK_SCHEDULE_H_
 
-typedef unsigned char u8;
-typedef unsigned int u32;
+#include <stdint.h>
+
+typedef uint8_t 	u8;
+typedef uint32_t 	u32;
 
 void packing(u32* out, const u8* in);
 void unpacking(u8* out, u32 *in);

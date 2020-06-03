@@ -3,8 +3,6 @@
 
 #include "skinny128.h"
 
-typedef unsigned char u8;
-typedef unsigned int u32;
 typedef struct {
     u8 tk1[16];                         //to manipulate tk1 byte-wise
     u32 rtk1[4*16];                     //to avoid tk schedule recomputations
@@ -47,7 +45,6 @@ typedef struct {
     ((u32*)(x))[2] = ((u32*)(y))[2] ^ ((u32*)(z))[2];   \
     ((u32*)(x))[3] = ((u32*)(y))[3] ^ ((u32*)(z))[3];   \
 })
-
 
 //Rho as defined in the Romulus specification
 //use pad as a tmp variable in case y = z

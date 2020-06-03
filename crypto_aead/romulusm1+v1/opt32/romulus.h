@@ -3,9 +3,7 @@
 
 #include "skinny128.h"
 
-typedef unsigned char u8;
-typedef unsigned int u32;
-typedef unsigned int u64;
+typedef uint64_t u64;
 typedef struct {
     u8 tk1[16];                         //to manipulate tk1 byte-wise
     u32 rtk1[4*16];                     //to avoid tk schedule recomputations

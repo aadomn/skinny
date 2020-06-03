@@ -1,15 +1,17 @@
 #ifndef TK_SCHEDULE_H_
 #define TK_SCHEDULE_H_
 
-typedef unsigned char u8;
-typedef unsigned int u32;
+#include <stdint.h>
+
+typedef uint8_t 	u8;
+typedef uint32_t 	u32;
 
 void packing(u32* out, const u8* in);
 void unpacking(u8* out, u32 *in);
 void precompute_rtk2_3(u32* rtk, const u8* tk2, const u8* tk3);
 void precompute_rtk1(u32* rtk1, const u8* tk1);
 
-#define ROR(x,y) 		(((x) >> (y)) | ((x) << (32 - (y))))
+#define ROR(x,y) 	(((x) >> (y)) | ((x) << (32 - (y))))
 
 #define XOR_BLOCKS(x,y) ({ 			\
 	(x)[0] ^= (y)[0];				\

@@ -1,8 +1,5 @@
-#include "skinny128.h"
-#include "tk_schedule.h"
 #include "romulus.h"
 #include <string.h>
-#include <stdio.h>
 
 //Encryption and authentication using Romulus-N1
 int crypto_aead_encrypt

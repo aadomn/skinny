@@ -1,8 +1,7 @@
 #ifndef SKINNY128_H_
 #define SKINNY128_H_
 
-typedef unsigned char u8;
-typedef unsigned int u32;
+#include "tk_schedule.h"
 
 #define SKINNY128_384_ROUNDS	56
 

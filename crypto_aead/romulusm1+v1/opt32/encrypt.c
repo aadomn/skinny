@@ -1,18 +1,15 @@
 /******************************************************************************
-* Constant-time implementation of Romulus-M1+ (v1.2).
+* Constant-time implementation of Romulus-M1+(v1).
 *
 * For more details, see the paper at: https://
 *
 * @author   Alexandre Adomnicai, Nanyang Technological University,
 *           alexandre.adomnicai@ntu.edu.sg
 *
-* @date     May 2020
+* @date     June 2020
 ******************************************************************************/
-#include "skinny128.h"
-#include "tk_schedule.h"
 #include "romulus.h"
 #include <string.h>
-#include <stdio.h>
 
 static u8 final_ad_domain (unsigned long long adlen, unsigned long long mlen) {
     u8 domain = 0;

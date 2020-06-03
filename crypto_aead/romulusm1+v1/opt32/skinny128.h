@@ -1,8 +1,7 @@
 #ifndef SKINNY128_H_
 #define SKINNY128_H_
 
-typedef unsigned char u8;
-typedef unsigned int u32;
+#include "tk_schedule.h"
 
 void skinny128_384_plus(u8* ctext, const u8* ptext, const u32* rtk1, const u32* rtk2_3);
 
