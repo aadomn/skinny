@@ -8,12 +8,10 @@
 * @author   Alexandre Adomnicai, Nanyang Technological University,
 *           alexandre.adomnicai@ntu.edu.sg
 *
-* @date     May 2020
+* @date     June 2020
 ******************************************************************************/
-#include "skinny128.h"
 #include "skinnyaead.h"
 #include <string.h>
-#include <stdio.h>
 
 /******************************************************************************
 * x ^= y where x, y are 128-bit blocks (16 bytes array).
@@ -41,7 +39,7 @@ static void skinny_aead_m1_auth(u8* auth, u8* c, u8* tag, tweakey* tk,
         UPDATE_LFSR(lfsr);
         LE_STR_64(tmp + BLOCKBYTES, lfsr);
         precompute_rtk1(tk->rtk1, tmp, tmp+BLOCKBYTES);
-        skinny128_384_encrypt(tmp, tmp+BLOCKBYTES, ad, ad+BLOCKBYTES, *tk);
+        skinny128_384_plus_encrypt(tmp, tmp+BLOCKBYTES, ad, ad+BLOCKBYTES, *tk);
         xor_block(auth, tmp);
         xor_block(auth, tmp + BLOCKBYTES);
         adlen -= 2*BLOCKBYTES;
@@ -61,17 +59,17 @@ static void skinny_aead_m1_auth(u8* auth, u8* c, u8* tag, tweakey* tk,
         memset(tmp, 0x00, BLOCKBYTES);
         memcpy(tmp, ad + BLOCKBYTES, adlen);
         tmp[adlen] ^= 0x80;                 // padding
-        skinny128_384_encrypt(tmp + BLOCKBYTES, tmp, ad, tmp, *tk);
+        skinny128_384_plus_encrypt(tmp + BLOCKBYTES, tmp, ad, tmp, *tk);
         xor_block(auth, tmp);
         xor_block(auth, tmp + BLOCKBYTES);
     } else if (adlen == BLOCKBYTES) {
         LE_STR_64(tmp, lfsr);
         if (mlen == 0) {    // if tag has *NOT* been calculated yet
             precompute_rtk1(tk->rtk1, tmp, tag);    // compute the tag
-            skinny128_384_encrypt(tmp, c, ad, c, *tk); 
+            skinny128_384_plus_encrypt(tmp, c, ad, c, *tk); 
         } else {            // if tag has  been calculated yet
             precompute_rtk1(tk->rtk1, tmp, tmp);    // process last ad block
-            skinny128_384_encrypt(tmp, tmp, ad, ad, *tk);
+            skinny128_384_plus_encrypt(tmp, tmp, ad, ad, *tk);
         }
         xor_block(auth, tmp);
     } else if (adlen > 0) {
@@ -82,10 +80,10 @@ static void skinny_aead_m1_auth(u8* auth, u8* c, u8* tag, tweakey* tk,
         tmp[BLOCKBYTES + adlen] ^= 0x80;            // padding
         if (mlen == 0) {    // if tag has *NOT* been calculated yet
             precompute_rtk1(tk->rtk1, tmp, tag);    // compute the tag
-            skinny128_384_encrypt(tmp, c, tmp + BLOCKBYTES, c, *tk); 
+            skinny128_384_plus_encrypt(tmp, c, tmp + BLOCKBYTES, c, *tk); 
         } else {            // if tag has been calculated yet
             precompute_rtk1(tk->rtk1, tmp,  tmp);   // process last ad block
-            skinny128_384_encrypt(tmp, tmp, tmp + BLOCKBYTES, tmp + BLOCKBYTES, *tk);
+            skinny128_384_plus_encrypt(tmp, tmp, tmp + BLOCKBYTES, tmp + BLOCKBYTES, *tk);
         }
         xor_block(auth, tmp);
     }
@@ -121,7 +119,7 @@ int crypto_aead_encrypt (unsigned char *c, unsigned long long *clen,
         UPDATE_LFSR(lfsr);
         LE_STR_64(tmp + BLOCKBYTES, lfsr);  // lfsr for 2nd block
         precompute_rtk1(tk.rtk1, tmp, tmp + BLOCKBYTES);
-        skinny128_384_encrypt(c, c + BLOCKBYTES, m, m + BLOCKBYTES, tk);
+        skinny128_384_plus_encrypt(c, c + BLOCKBYTES, m, m + BLOCKBYTES, tk);
         xor_block(c + mlen, m);                 // sum for tag computation
         xor_block(c + mlen, m + BLOCKBYTES);    // sum for tag computation
         mlen -= 2*BLOCKBYTES;
@@ -136,7 +134,7 @@ int crypto_aead_encrypt (unsigned char *c, unsigned long long *clen,
         LE_STR_64(tmp + BLOCKBYTES, lfsr);  // lfsr for 2nd block
         SET_DOMAIN(tmp + BLOCKBYTES, 0x01);       // domain for padding m
         precompute_rtk1(tk.rtk1, tmp, tmp + BLOCKBYTES);
-        skinny128_384_encrypt(c, auth, m, auth, tk);
+        skinny128_384_plus_encrypt(c, auth, m, auth, tk);
         xor_block(c + mlen, m);
         for(i = 0; i < mlen - BLOCKBYTES; i++) {
             c[BLOCKBYTES + i] = auth[i] ^ m[BLOCKBYTES + i];
@@ -155,7 +153,7 @@ int crypto_aead_encrypt (unsigned char *c, unsigned long long *clen,
         SET_DOMAIN(tmp + BLOCKBYTES, 0x04);     // domain for tag computation
         xor_block(c + mlen, m);                 // sum for tag computation
         precompute_rtk1(tk.rtk1, tmp, tmp + BLOCKBYTES);
-        skinny128_384_encrypt(c, c + mlen, m, c + mlen, tk);
+        skinny128_384_plus_encrypt(c, c + mlen, m, c + mlen, tk);
         c += BLOCKBYTES;
     } else if (mlen > 0) {                      // last block is partial
         LE_STR_64(tmp, lfsr);               // lfsr for last block
@@ -167,7 +165,7 @@ int crypto_aead_encrypt (unsigned char *c, unsigned long long *clen,
             c[mlen + i] ^= m[i];                // sum for tag computation
         c[mlen + i] ^= 0x80;                    // padding
         precompute_rtk1(tk.rtk1, tmp, tmp + BLOCKBYTES);
-        skinny128_384_encrypt(auth, c + mlen, auth, c + mlen, tk);
+        skinny128_384_plus_encrypt(auth, c + mlen, auth, c + mlen, tk);
         for(i = 0; i < mlen; i++)
             c[i] = auth[i] ^ m[i];               // encrypted padded block
         c += mlen;
@@ -176,7 +174,7 @@ int crypto_aead_encrypt (unsigned char *c, unsigned long long *clen,
         LE_STR_64(tag, lfsr);               // lfsr for tag computation                                     
         if((adlen % 32) == 0 || (adlen % 32) > BLOCKBYTES) {    //if all AD can be processed in //
             precompute_rtk1(tk.rtk1, tag, tag);
-            skinny128_384_encrypt(c, c, c, c, tk); // compute the tag
+            skinny128_384_plus_encrypt(c, c, c, c, tk); // compute the tag
         }
     }
     // ----------------- Process the plaintext -----------------
@@ -225,7 +223,7 @@ int crypto_aead_decrypt (unsigned char *m, unsigned long long *mlen,
         UPDATE_LFSR(lfsr);
         LE_STR_64(tmp + BLOCKBYTES, lfsr);  // lfsr for 2nd block
         precompute_rtk1(tk.rtk1, tmp, tmp + BLOCKBYTES);
-        skinny128_384_decrypt(m, m + BLOCKBYTES, c, c + BLOCKBYTES, tk);
+        skinny128_384_plus_decrypt(m, m + BLOCKBYTES, c, c + BLOCKBYTES, tk);
         xor_block(sum, m);                 // sum for tag computation
         xor_block(sum, m + BLOCKBYTES);    // sum for tag computation
         clen -= 2*BLOCKBYTES;
@@ -237,13 +235,13 @@ int crypto_aead_decrypt (unsigned char *m, unsigned long long *mlen,
     if (clen > BLOCKBYTES) {                // pad and process 2 blocs in //
         LE_STR_64(tmp, lfsr);               // lfsr for 1st block
         precompute_rtk1(tk.rtk1, tmp, tmp);
-        skinny128_384_decrypt(m, m, c, c, tk);
+        skinny128_384_plus_decrypt(m, m, c, c, tk);
         xor_block(sum, m);
         UPDATE_LFSR(lfsr);
         LE_STR_64(tmp, lfsr);               // lfsr for 2nd block
         SET_DOMAIN(tmp, 0x01);              // domain for padding m
         precompute_rtk1(tk.rtk1, tmp, tmp);
-        skinny128_384_encrypt(auth, auth, auth, auth, tk);
+        skinny128_384_plus_encrypt(auth, auth, auth, auth, tk);
         for(i = 0; i < clen - BLOCKBYTES; i++) {
             m[BLOCKBYTES + i] = auth[i] ^ c[BLOCKBYTES + i];
             sum[i] ^= m[BLOCKBYTES + i]; 
@@ -257,7 +255,7 @@ int crypto_aead_decrypt (unsigned char *m, unsigned long long *mlen,
     } else if (clen == BLOCKBYTES) {        // last block is full
         LE_STR_64(tmp, lfsr);               // lfsr for last full block
         precompute_rtk1(tk.rtk1, tmp, tmp);
-        skinny128_384_decrypt(m, m, c, c, tk);
+        skinny128_384_plus_decrypt(m, m, c, c, tk);
         xor_block(sum, m);                  // sum for tag computation
         SET_DOMAIN(tag, 0x04);              // domain for tag computation
         UPDATE_LFSR(lfsr);
@@ -267,7 +265,7 @@ int crypto_aead_decrypt (unsigned char *m, unsigned long long *mlen,
         LE_STR_64(tmp, lfsr);               // lfsr for last block
         SET_DOMAIN(tmp, 0x01);              // domain for padding
         precompute_rtk1(tk.rtk1, tmp, tmp);
-        skinny128_384_encrypt(auth, auth, auth, auth, tk);
+        skinny128_384_plus_encrypt(auth, auth, auth, auth, tk);
         for(i = 0; i < clen; i++) {
             m[i] = auth[i] ^ c[i];          // encrypted padded block
             sum[i] ^= m[i];                 // sum for tag computation
@@ -283,7 +281,7 @@ int crypto_aead_decrypt (unsigned char *m, unsigned long long *mlen,
         LE_STR_64(tag, lfsr);       // lfsr for tag computation                        
         if((adlen % 32) == 0 || (adlen % 32) > BLOCKBYTES) {
             precompute_rtk1(tk.rtk1, tag, tag); //if AD can be processed in //
-            skinny128_384_encrypt(sum, sum, sum, sum, tk); // compute the tag
+            skinny128_384_plus_encrypt(sum, sum, sum, sum, tk); // compute the tag
         }
     }
 

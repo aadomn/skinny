@@ -16,12 +16,9 @@
 * @author	Alexandre Adomnicai, Nanyang Technological University,
 *			alexandre.adomnicai@ntu.edu.sg
 *
-* @date		May 2020
+* @date		June 2020
 ******************************************************************************/
-#include <stdio.h>
-#include <string.h>
 #include "skinny128.h"
-#include "tk_schedule.h"
 
 /******************************************************************************
 * The MixColumns computation for rounds i such that (i % 4) == 0

@@ -16,12 +16,9 @@
 * @author	Alexandre Adomnicai, Nanyang Technological University,
 *			alexandre.adomnicai@ntu.edu.sg
 *
-* @date		May 2020
+* @date		June 2020
 ******************************************************************************/
-#include <stdio.h>
-#include <string.h>
 #include "skinny128.h"
-#include "tk_schedule.h"
 
 /****************************************************************************
 * The MixColumns operation for rounds i such that (i % 4) == 0.
@@ -84,7 +81,7 @@ void mixcolumns_3(u32* state) {
 }
 
 /****************************************************************************
-* The inverse MixColumns oepration for rounds i such that (i % 4) == 0
+* The inverse MixColumns operation for rounds i such that (i % 4) == 0
 ****************************************************************************/
 void inv_mixcolumns_0(u32* state) {
 	u32 tmp;
@@ -99,7 +96,7 @@ void inv_mixcolumns_0(u32* state) {
 }
 
 /****************************************************************************
-* The inverse MixColumns oepration for rounds i such that (i % 4) == 1
+* The inverse MixColumns operation for rounds i such that (i % 4) == 1
 ****************************************************************************/
 void inv_mixcolumns_1(u32* state) {
 	u32 tmp;
@@ -114,7 +111,7 @@ void inv_mixcolumns_1(u32* state) {
 }
 
 /****************************************************************************
-* The inverse MixColumns oepration for rounds i such that (i % 4) == 2
+* The inverse MixColumns operation for rounds i such that (i % 4) == 2
 ****************************************************************************/
 void inv_mixcolumns_2(u32* state) {
 	u32 tmp;
@@ -129,7 +126,7 @@ void inv_mixcolumns_2(u32* state) {
 }
 
 /****************************************************************************
-* The inverse MixColumns oepration for rounds i such that (i % 4) == 3
+* The inverse MixColumns operation for rounds i such that (i % 4) == 3
 ****************************************************************************/
 void inv_mixcolumns_3(u32* state) {
 	u32 tmp;
@@ -162,12 +159,12 @@ void add_tweakey(u32* state, const u32* rtk1, const u32* rtk2_3) {
 * The input parameters 'rtk1' and 'rtk2_3' are given seperately to avoid
 * unnecessary recomputations of the entire tk schedule during SKINNY-AEAD-M1.
 ****************************************************************************/
-void skinny128_384_encrypt(u8* ctext, u8* ctext_bis, const u8* ptext, 
+void skinny128_384_plus_encrypt(u8* ctext, u8* ctext_bis, const u8* ptext, 
 					const u8* ptext_bis, const tweakey tk) {
 	u32 state[8];
 	packing(state, ptext, ptext_bis);
-	for(int i = 0; i < 14; i++)
-		QUADRUPLE_ROUND(state, rtk1 + (i%4)*32, rtk2_3 + i*32);
+	for(int i = 0; i < 10; i++)
+		QUADRUPLE_ROUND(state, tk.rtk1 + (i%4)*32, tk.rtk2_3 + i*32);
 	unpacking(ctext, ctext_bis, state);
 }
 
@@ -176,11 +173,11 @@ void skinny128_384_encrypt(u8* ctext, u8* ctext_bis, const u8* ptext,
 * The input parameters 'rtk1' and 'rtk2_3' are given seperately to avoid
 * unnecessary recomputations of the entire tk schedule during SKINNY-AEAD-M1.
 ****************************************************************************/
-void skinny128_384_decrypt(u8* ptext, u8* ptext_bis, const u8* ctext, 
+void skinny128_384_plus_decrypt(u8* ptext, u8* ptext_bis, const u8* ctext, 
 					const u8* ctext_bis, const tweakey tk) {
 	u32 state[8];
 	packing(state, ctext, ctext_bis);
-	for(int i = 13; i >= 0; i--)
-		INV_QUADRUPLE_ROUND(state, rtk1 + (i%4)*32, rtk2_3 + i*32);
+	for(int i = 9; i >= 0; i--)
+		INV_QUADRUPLE_ROUND(state, tk.rtk1 + (i%4)*32, tk.rtk2_3 + i*32);
 	unpacking(ptext, ptext_bis, state);
 }

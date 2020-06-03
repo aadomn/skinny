@@ -7,14 +7,10 @@
 * @author	Alexandre Adomnicai, Nanyang Technological University,
 *			alexandre.adomnicai@ntu.edu.sg
 *
-* @date		May 2020
+* @date		June 2020
 *******************************************************************************/
-#include <stdio.h>
 #include <string.h>
 #include "tk_schedule.h"
-
-typedef unsigned char u8;
-typedef unsigned int u32;
 
 /****************************************************************************
 * The round constants according to the fixsliced representation.

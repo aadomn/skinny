@@ -3,9 +3,7 @@
 
 #include "skinny128.h"
 
-typedef unsigned char u8;
-typedef unsigned int u32;
-typedef unsigned long long u64;
+typedef uint64_t    u64;
 
 #define TAGBYTES    16
 #define KEYBYTES    16

@@ -1,8 +1,10 @@
 #ifndef TK_SCHEDULE_BS_H_
 #define TK_SCHEDULE_BS_H_
 
-typedef unsigned char u8;
-typedef unsigned int u32;
+#include <stdint.h>
+
+typedef uint8_t 	u8;
+typedef uint32_t 	u32;
 
 typedef struct {
 	u32 rtk1[8*16];

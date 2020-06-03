@@ -8,12 +8,10 @@
 * @author   Alexandre Adomnicai, Nanyang Technological University,
 *           alexandre.adomnicai@ntu.edu.sg
 *
-* @date     May 2020
+* @date     June 2020
 ******************************************************************************/
-#include "skinny128.h"
 #include "skinnyaead.h"
 #include <string.h>
-#include <stdio.h>
 
 /******************************************************************************
 * x ^= y where x, y are 128-bit blocks (16 bytes array).

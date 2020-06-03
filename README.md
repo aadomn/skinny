@@ -12,8 +12,8 @@ It also provides implementations of the following variants of Romulus and SKINNY
 - `crypto_aead/romulusn1+v1`
 - `crypto_aead/romulusm1v1`
 - `crypto_aead/romulusm1+v1`
-- `crypto_aead/skinnyaeadm1v11`
-- `crypto_aead/skinnyaeadm1+v11`.
+- `crypto_aead/skinnyaeadm1v1`
+- `crypto_aead/skinnyaeadm1+v1`.
 
 For each algorithm, one can find:
 

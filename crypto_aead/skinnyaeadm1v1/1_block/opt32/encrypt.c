@@ -1,19 +1,15 @@
 /******************************************************************************
-* Constant-time implementation of SKINNY-AEAD-M1 (v1.1).
-*
-* Two blocks are treated in parallel with SKINNY-128-384 whenever possible.
+* Constant-time implementation of SKINNY-AEAD-M1(v1).
 *
 * For more details, see the paper at: https://
 *
 * @author   Alexandre Adomnicai, Nanyang Technological University,
 *           alexandre.adomnicai@ntu.edu.sg
 *
-* @date     May 2020
+* @date     June 2020
 ******************************************************************************/
-#include "skinny128.h"
 #include "skinnyaead.h"
 #include <string.h>
-#include <stdio.h>
 
 /******************************************************************************
 * x ^= y where x, y are 128-bit blocks (16 bytes array).
