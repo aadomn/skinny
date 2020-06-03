@@ -1,8 +1,10 @@
 #ifndef TK_SCHEDULE_H_
 #define TK_SCHEDULE_H_
 
-typedef unsigned char u8;
-typedef unsigned int u32;
+#include <stdint.h>
+
+typedef uint8_t u8;
+typedef uint32_t u32;
 
 typedef struct {
 	u8 tk1[16];
@@ -14,14 +16,7 @@ void packing(u32* out, const u8* in);
 void unpacking(u8* out, u32 *in);
 void precompute_tk(u32* rtk, const tweakey tk, int rounds);
 
-#define ROR(x,y) 		(((x) >> (y)) | ((x) << (32 - (y))))
-
-#define XOR_BLOCKS(x,y) ({ 			\
-	(x)[0] ^= (y)[0];				\
-	(x)[1] ^= (y)[1];				\
-	(x)[2] ^= (y)[2];				\
-	(x)[3] ^= (y)[3];				\
-})
+#define ROR(x,y) (((x) >> (y)) | ((x) << (32 - (y))))
 	
 #define SWAPMOVE(a, b, mask, n)	({	\
 	tmp = (b ^ (a >> n)) & mask;	\

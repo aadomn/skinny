@@ -4,11 +4,9 @@
 * @author	Alexandre Adomnicai, Nanyang Technological University,
 *			alexandre.adomnicai@ntu.edu.sg
 *
-* @date		May 2020
+* @date		June 2020
 ******************************************************************************/
-#include <stdio.h>
 #include <string.h>
-#include "tk_schedule.h"
 #include "skinny128.h"
 
 /******************************************************************************
@@ -241,10 +239,16 @@ void permute_tk_14(u32* tk) {
 void precompute_lfsr_tk2(u32* tk, const u8* key, const int rounds) {
 	u32 tk2[4];
 	packing(tk2, key);
-	memcpy(tk, tk2, 16);
+	tk[0] = tk2[0];
+	tk[1] = tk2[1];
+	tk[2] = tk2[2];
+	tk[3] = tk2[3];
 	for(int i = 0 ; i < rounds; i+=2) {
 		lfsr2_bs(tk2);
-		memcpy(tk+i*4+4, tk2, 16);
+		tk[i*4+4] = tk2[0];
+		tk[i*4+5] = tk2[1];
+		tk[i*4+6] = tk2[2];
+		tk[i*4+7] = tk2[3];
 	}
 }
 
@@ -275,19 +279,20 @@ void permute_tk(u32* tk, const u8* key, const int rounds) {
 	u32 test;
 	u32 tk1[4], tmp[4];
 	packing(tk1, key);
-	memcpy(tmp, tk, 16);
-	tmp[0] ^= tk1[0];
-	tmp[1] ^= tk1[1];
-	tmp[2] ^= tk1[2];
-	tmp[3] ^= tk1[3];
+	tmp[0] = tk[0] ^ tk1[0];
+	tmp[1] = tk[1] ^ tk1[1];
+	tmp[2] = tk[2] ^ tk1[2];
+	tmp[3] = tk[3] ^ tk1[3];
 	for(int i = 0 ; i < rounds; i += 8) {
 		test = (i % 16 < 8) ? 1 : 0; 			//to apply the right power of P
 		tk[i*4] = tmp[2] & 0xf0f0f0f0;
 		tk[i*4+1] = tmp[3] & 0xf0f0f0f0;
 		tk[i*4+2] = tmp[0] & 0xf0f0f0f0;
 		tk[i*4+3] = tmp[1] & 0xf0f0f0f0;
-		memcpy(tmp, tk+i*4+4, 16);
-		XOR_BLOCKS(tmp, tk1);
+		tmp[0] = tk[i*4+4] ^ tk1[0];
+		tmp[1] = tk[i*4+5] ^ tk1[1];
+		tmp[2] = tk[i*4+6] ^ tk1[2];
+		tmp[3] = tk[i*4+7] ^ tk1[3];
 		if (test)
 			permute_tk_2(tmp); 					// applies P^2
 		else
@@ -304,8 +309,10 @@ void permute_tk(u32* tk, const u8* key, const int rounds) {
 		tk[i*4+10] |= ROR(tmp[0],12) & 0x0c0c0c0c;
 		tk[i*4+11] = ROR(tmp[1],28) & 0x03030303;
 		tk[i*4+11] |= ROR(tmp[1],12) & 0x0c0c0c0c;
-		memcpy(tmp, tk+i*4+12, 16);
-		XOR_BLOCKS(tmp, tk1);
+		tmp[0] = tk[i*4+12] ^ tk1[0];
+		tmp[1] = tk[i*4+13] ^ tk1[1];
+		tmp[2] = tk[i*4+14] ^ tk1[2];
+		tmp[3] = tk[i*4+15] ^ tk1[3];
 		if (test)
 			permute_tk_4(tmp); 					// applies P^4
 		else
@@ -318,8 +325,10 @@ void permute_tk(u32* tk, const u8* key, const int rounds) {
 		tk[i*4+17] = ROR(tmp[3], 16) & 0xf0f0f0f0;
 		tk[i*4+18] = ROR(tmp[0], 16) & 0xf0f0f0f0;
 		tk[i*4+19] = ROR(tmp[1], 16) & 0xf0f0f0f0;
-		memcpy(tmp, tk+i*4+20, 16);
-		XOR_BLOCKS(tmp, tk1);
+		tmp[0] = tk[i*4+20] ^ tk1[0];
+		tmp[1] = tk[i*4+21] ^ tk1[1];
+		tmp[2] = tk[i*4+22] ^ tk1[2];
+		tmp[3] = tk[i*4+23] ^ tk1[3];
 		if (test)
 			permute_tk_6(tmp); 					//	applies P^6
 		else
@@ -336,8 +345,10 @@ void permute_tk(u32* tk, const u8* key, const int rounds) {
 		tk[i*4+26] |= ROR(tmp[0],28) & 0x0c0c0c0c;
 		tk[i*4+27] = ROR(tmp[1],12) & 0x03030303;
 		tk[i*4+27] |= ROR(tmp[1],28) & 0x0c0c0c0c;
-		memcpy(tmp, tk+i*4+28, 16);
-		XOR_BLOCKS(tmp, tk1);
+		tmp[0] = tk[i*4+28] ^ tk1[0];
+		tmp[1] = tk[i*4+29] ^ tk1[1];
+		tmp[2] = tk[i*4+30] ^ tk1[2];
+		tmp[3] = tk[i*4+31] ^ tk1[3];
 		if (test)
 			permute_tk_8(tmp); 					// applies P^8
 		for(int j = 0; j < 4; j++) {
@@ -358,9 +369,9 @@ void permute_tk(u32* tk, const u8* key, const int rounds) {
 ******************************************************************************/
 void precompute_tk(u32* rtk, const tweakey tk, int rounds) {
 	memset(rtk, 0x00, 16*rounds);
-	if (rounds >= SKINNY128_256_ROUNDS)
+	if (rounds > SKINNY128_128_ROUNDS)
 		precompute_lfsr_tk2(rtk, tk.tk2, rounds);
-	if (rounds >= SKINNY128_384_ROUNDS)
+	if (rounds > SKINNY128_256_ROUNDS)
 		precompute_lfsr_tk3(rtk, tk.tk3, rounds);
 	permute_tk(rtk, tk.tk1, rounds);
 	for(int i = 0; i < rounds; i++) {		//add all rconsts to TK

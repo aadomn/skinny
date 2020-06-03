@@ -6,14 +6,10 @@
 * @author	Alexandre Adomnicai, Nanyang Technological University,
 *			alexandre.adomnicai@ntu.edu.sg
 *
-* @date		May 2020
+* @date		June 2020
 *******************************************************************************/
-#include <stdio.h>
 #include <string.h>
-#include "tk_schedule.h"
-
-typedef unsigned char u8;
-typedef unsigned int u32;
+#include "skinny128.h"
 
 /****************************************************************************
 * The round constants according to the fixsliced representation.
@@ -672,9 +668,9 @@ void permute_tk(u32* tk, const u8* tk1_0, const u8* tk1_1, const int rounds) {
 void precompute_tk(u32* rtk, const tweakey tk, const tweakey tk_bis,
 				int rounds) {
 	memset(rtk, 0x00, 32*rounds);
-	if(rounds > 40)
+	if(rounds > SKINNY128_128_ROUNDS)
 		precompute_lfsr_tk2(rtk, tk.tk2, tk_bis.tk2, rounds);
-	if(rounds > 48)
+	if(rounds > SKINNY128_256_ROUNDS)
 		precompute_lfsr_tk3(rtk, tk.tk3, tk_bis.tk3, rounds);
 	permute_tk(rtk, tk.tk1, tk_bis.tk1, rounds);
 	for(int i = 0; i < rounds; i++) {			//add all rconsts to TK

@@ -1,5 +1,6 @@
 #ifndef SKINNY128_H_
 #define SKINNY128_H_
+
 #include "tk_schedule.h"
 
 void skinny128_128_encrypt(u8* ctext, const u8* ptext, const tweakey tk);
