@@ -153,20 +153,8 @@ void skinny128_384_encrypt(u8* ctext, const u8* ptext, const u32* rtk1,
 	u32 tmp; 					// used in SWAPMOVE macro
 	u32 state[4]; 				// 128-bit state
 	packing(state, ptext); 		// from byte to bitsliced representation
-	QUADRUPLE_ROUND(state, rtk1, 	rtk2_3);
-	QUADRUPLE_ROUND(state, rtk1+16, rtk2_3+16);
-	QUADRUPLE_ROUND(state, rtk1+32, rtk2_3+32);
-	QUADRUPLE_ROUND(state, rtk1+48, rtk2_3+48);
-	QUADRUPLE_ROUND(state, rtk1, 	rtk2_3+64);
-	QUADRUPLE_ROUND(state, rtk1+16, rtk2_3+80);
-	QUADRUPLE_ROUND(state, rtk1+32, rtk2_3+96);
-	QUADRUPLE_ROUND(state, rtk1+48, rtk2_3+112);
-	QUADRUPLE_ROUND(state, rtk1, 	rtk2_3+128);
-	QUADRUPLE_ROUND(state, rtk1+16, rtk2_3+144);
-	QUADRUPLE_ROUND(state, rtk1+32, rtk2_3+160);
-	QUADRUPLE_ROUND(state, rtk1+48, rtk2_3+176);
-	QUADRUPLE_ROUND(state, rtk1, 	rtk2_3+192);
-	QUADRUPLE_ROUND(state, rtk1+16, rtk2_3+208);
+	for(int i = 0; i < 14; i++)
+		QUADRUPLE_ROUND(state, rtk1 + (i%4)*16, rtk2_3 + i*16);
 	unpacking(ctext, state);	// from bitsliced to byte representation
 }
 
@@ -180,19 +168,7 @@ void skinny128_384_decrypt(u8* ctext, const u8* ptext, const u32* rtk1,
 	u32 tmp; 					// used in SWAPMOVE macro
 	u32 state[4]; 				// 128-bit state
 	packing(state, ptext); 		// from byte to bitsliced representation
-	INV_QUADRUPLE_ROUND(state, rtk1+16, rtk2_3+208);
-	INV_QUADRUPLE_ROUND(state, rtk1, 	rtk2_3+192);
-	INV_QUADRUPLE_ROUND(state, rtk1+48, rtk2_3+176);
-	INV_QUADRUPLE_ROUND(state, rtk1+32, rtk2_3+160);
-	INV_QUADRUPLE_ROUND(state, rtk1+16, rtk2_3+144);
-	INV_QUADRUPLE_ROUND(state, rtk1, 	rtk2_3+128);
-	INV_QUADRUPLE_ROUND(state, rtk1+48, rtk2_3+112);
-	INV_QUADRUPLE_ROUND(state, rtk1+32, rtk2_3+96);
-	INV_QUADRUPLE_ROUND(state, rtk1+16, rtk2_3+80);
-	INV_QUADRUPLE_ROUND(state, rtk1, 	rtk2_3+64);
-	INV_QUADRUPLE_ROUND(state, rtk1+48, rtk2_3+48);
-	INV_QUADRUPLE_ROUND(state, rtk1+32, rtk2_3+32);
-	INV_QUADRUPLE_ROUND(state, rtk1+16, rtk2_3+16);
-	INV_QUADRUPLE_ROUND(state, rtk1, 	rtk2_3);
+	for(int i = 13; i >= 0; i--)
+		INV_QUADRUPLE_ROUND(state, rtk1 + (i%4)*16, rtk2_3 + i*16);
 	unpacking(ctext, state);	// from bitsliced to byte representation
 }

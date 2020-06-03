@@ -16,10 +16,8 @@
 * @author	Alexandre Adomnicai, Nanyang Technological University,
 *			alexandre.adomnicai@ntu.edu.sg
 *
-* @date		May 2020
+* @date		June 2020
 ******************************************************************************/
-#include <stdio.h>
-#include <string.h>
 #include "skinny128.h"
 
 /******************************************************************************
@@ -92,15 +90,7 @@ void skinny128_384_plus(u8* ctext, const u8* ptext, const u32* rtk1,
 	u32 tmp; 					// used in SWAPMOVE macro
 	u32 state[4]; 				// 128-bit state
 	packing(state, ptext); 		// from byte to bitsliced representation
-	QUADRUPLE_ROUND(state, rtk1, 	rtk2_3);
-	QUADRUPLE_ROUND(state, rtk1+16, rtk2_3+16);
-	QUADRUPLE_ROUND(state, rtk1+32, rtk2_3+32);
-	QUADRUPLE_ROUND(state, rtk1+48, rtk2_3+48);
-	QUADRUPLE_ROUND(state, rtk1, 	rtk2_3+64);
-	QUADRUPLE_ROUND(state, rtk1+16, rtk2_3+80);
-	QUADRUPLE_ROUND(state, rtk1+32, rtk2_3+96);
-	QUADRUPLE_ROUND(state, rtk1+48, rtk2_3+112);
-	QUADRUPLE_ROUND(state, rtk1, 	rtk2_3+128);
-	QUADRUPLE_ROUND(state, rtk1+16, rtk2_3+144);
+	for(int i = 0; i < 10; i++)
+		QUADRUPLE_ROUND(state, rtk1 + (i%4)*16, rtk2_3 + i*16);
 	unpacking(ctext, state);	// from bitsliced to byte representation
 }

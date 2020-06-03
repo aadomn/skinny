@@ -166,16 +166,8 @@ void skinny128_384_plus_encrypt(u8* ctext, u8* ctext_bis, const u8* ptext,
 					const u8* ptext_bis, const tweakey tk) {
 	u32 state[8];
 	packing(state, ptext, ptext_bis);
-	QUADRUPLE_ROUND(state, tk.rtk1, 	tk.rtk2_3);
-	QUADRUPLE_ROUND(state, tk.rtk1+32, 	tk.rtk2_3+32);
-	QUADRUPLE_ROUND(state, tk.rtk1+64, 	tk.rtk2_3+64);
-	QUADRUPLE_ROUND(state, tk.rtk1+96, 	tk.rtk2_3+96);
-	QUADRUPLE_ROUND(state, tk.rtk1, 	tk.rtk2_3+128);
-	QUADRUPLE_ROUND(state, tk.rtk1+32, 	tk.rtk2_3+160);
-	QUADRUPLE_ROUND(state, tk.rtk1+64, 	tk.rtk2_3+192);
-	QUADRUPLE_ROUND(state, tk.rtk1+96, 	tk.rtk2_3+224);
-	QUADRUPLE_ROUND(state, tk.rtk1, 	tk.rtk2_3+256);
-	QUADRUPLE_ROUND(state, tk.rtk1+32, 	tk.rtk2_3+288);
+	for(int i = 0; i < 10; i++)
+		QUADRUPLE_ROUND(state, rtk1 + (i%4)*32, rtk2_3 + i*32);
 	unpacking(ctext, ctext_bis, state);
 }
 
@@ -188,15 +180,7 @@ void skinny128_384_plus_decrypt(u8* ptext, u8* ptext_bis, const u8* ctext,
 					const u8* ctext_bis, const tweakey tk) {
 	u32 state[8];
 	packing(state, ctext, ctext_bis);
-	INV_QUADRUPLE_ROUND(state, tk.rtk1+32, 	tk.rtk2_3+288);
-	INV_QUADRUPLE_ROUND(state, tk.rtk1, 	tk.rtk2_3+256);
-	INV_QUADRUPLE_ROUND(state, tk.rtk1+96, 	tk.rtk2_3+224);
-	INV_QUADRUPLE_ROUND(state, tk.rtk1+64, 	tk.rtk2_3+192);
-	INV_QUADRUPLE_ROUND(state, tk.rtk1+32, 	tk.rtk2_3+160);
-	INV_QUADRUPLE_ROUND(state, tk.rtk1, 	tk.rtk2_3+128);
-	INV_QUADRUPLE_ROUND(state, tk.rtk1+96, 	tk.rtk2_3+96);
-	INV_QUADRUPLE_ROUND(state, tk.rtk1+64, 	tk.rtk2_3+64);
-	INV_QUADRUPLE_ROUND(state, tk.rtk1+32, 	tk.rtk2_3+32);
-	INV_QUADRUPLE_ROUND(state, tk.rtk1, 	tk.rtk2_3);
+	for(int i = 9; i >= 0; i--)
+		INV_QUADRUPLE_ROUND(state, rtk1 + (i%4)*32, rtk2_3 + i*32);
 	unpacking(ptext, ptext_bis, state);
 }
