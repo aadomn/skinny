@@ -15,7 +15,7 @@ It also provides implementations of the following variants of Romulus and SKINNY
 - `crypto_aead/skinnyaead-m1`
 - `crypto_aead/skinnyaead-m1+`.
 
-Note that the goal of the `crypto_aead_hash` directory is to provide an implementation that support both AEAD and hash functions at once. Because the tweakey schedule in `crypto_aead/romulus-n/m` takes advantage of the fact that half of TK1 is always null for Romulus-N/M, the code slightly differs in `crypto_aead_hash` to be compliant with Romulus-H.
+Note that the goal of the `crypto_aead_hash` directory is to provide an implementation which supports both AEAD and hash functionalities. Because the tweakey schedule in `crypto_aead/romulus-n/m` takes advantage of the fact that half of TK1 is always null for Romulus-N/M, the code slightly differs in `crypto_aead_hash` to be compliant with Romulus-H.
 
 For each algorithm, one can find:
 
