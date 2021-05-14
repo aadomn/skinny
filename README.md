@@ -6,7 +6,9 @@ This repository contains efficient bitsliced implementations of SKINNY-128 on 32
 - `crypto_tbc/skinny128/1_block`:  a single block is processed a time
 - `crypto_tbc/skinny128/2_blocks`: two blocks are processed in parallel.
 
-It also provides implementations of the following variants of Romulus and SKINNY-AEAD:
+More details on the implementation tricks can be found in the paper [Fixslicing AES-like Ciphers](https://eprint.iacr.org/2020/1123.pdf) regarding the SKINNY-128 round function, and in [Fixslicing: Application to Some NIST LWC Round 2 Candidates](https://csrc.nist.gov/CSRC/media/Events/lightweight-cryptography-workshop-2020/documents/papers/fixslicing-lwc2020.pdf) regarding the tweakey schedule.
+
+This repository also provides implementations of the following variants of Romulus and SKINNY-AEAD algorithms:
 
 - `crypto_aead/romulus-n`
 - `crypto_aead/romulus-m`
