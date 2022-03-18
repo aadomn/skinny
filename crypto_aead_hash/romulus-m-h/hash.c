@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include "skinny128.h"
 #include "tk_schedule.h"
-#include "romulus_n.h"
+#include "romulus_m.h"
 #include "crypto_hash.h"
 
 void hirose_128_128_256

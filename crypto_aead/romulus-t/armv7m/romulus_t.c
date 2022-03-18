@@ -233,7 +233,6 @@ void romulust_kdf(
   const unsigned char *npub,
   const unsigned char *k)
 {
-	uint32_t tmp;
   uint8_t rtk_1[TKPERMORDER*BLOCKBYTES];
   uint8_t rtk_3[SKINNY128_384_ROUNDS*BLOCKBYTES];
 	SET_DOMAIN(tk1, 0x42);

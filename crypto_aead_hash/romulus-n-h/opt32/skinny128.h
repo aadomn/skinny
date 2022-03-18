@@ -1,12 +1,15 @@
 #ifndef SKINNY128_H_
 #define SKINNY128_H_
 
-typedef unsigned char u8;
-typedef unsigned int u32;
-
-void skinny128_384_plus(u8* ctext, const u8* ptext, const u32* rtk1, const u32* rtk2_3);
+#include <stdint.h>
 
 #define SKINNY128_384_ROUNDS	40
+#define BLOCKBYTES 				16
+
+void skinny128_384_plus(
+	uint8_t* ctext,const uint8_t* ptext,
+	const uint32_t* rtk1, const uint32_t* rtk2_3
+);
 
 #define QUADRUPLE_ROUND(state, rtk1, rtk2_3) ({			\
 	state[3] ^= ~(state[0] | state[1]);					\
@@ -90,6 +93,5 @@ void skinny128_384_plus(u8* ctext, const u8* ptext, const u32* rtk1, const u32* 
 	state[3] ^= (rtk2_3)[15];							\
 	mixcolumns_3(state);								\
 })
-
 
 #endif  // SKINNY128_H_

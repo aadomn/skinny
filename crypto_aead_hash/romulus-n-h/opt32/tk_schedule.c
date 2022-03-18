@@ -4,8 +4,8 @@
 * For more details, see the paper at
 * https://csrc.nist.gov/CSRC/media/Events/lightweight-cryptography-workshop-2020
 * /documents/papers/fixslicing-lwc2020.pdf
-* 
-* 
+*  
+*
 * @author	Alexandre Adomnicai, Nanyang Technological University,
 *			alexandre.adomnicai@ntu.edu.sg
 *
@@ -13,16 +13,14 @@
 ******************************************************************************/
 #include <stdio.h>
 #include <string.h> 		//for memcmp
+#include <stdint.h>
 #include "tk_schedule.h"
 #include "skinny128.h"
-
-typedef unsigned char u8;
-typedef unsigned int u32;
 
 /******************************************************************************
 * The round constants according to the new representation.
 ******************************************************************************/
-u32 rconst_32_bs[160] = {
+uint32_t rconst_32_bs[160] = {
 	0x00000004, 0xffffffbf, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
 	0x10000100, 0xfffffeff, 0x44000000, 0xfbffffff, 0x00000000, 0x04000000,
 	0x00100000, 0x00100000, 0x00100001, 0xffefffff, 0x00440000, 0xffafffff,
@@ -59,8 +57,8 @@ u32 rconst_32_bs[160] = {
 * 	26 30 58 62 90 94 122 126 | ... | 2 6 34 38 66 70 98 102
 * 	27 31 59 63 91 95 123 127 | ... | 3 7 35 39 67 71 99 103
 ******************************************************************************/
-void packing(u32* out, const u8* in) {
-	u32 tmp;
+void packing(uint32_t* out, const uint8_t* in) {
+	uint32_t tmp;
 	LE_LOAD(out, in);
 	LE_LOAD(out + 1, in + 8);
 	LE_LOAD(out + 2, in + 4);
@@ -80,8 +78,8 @@ void packing(u32* out, const u8* in) {
 /******************************************************************************
 * Unpack the input to a byte-wise representation
 ******************************************************************************/
-void unpacking(u8* out, u32 *in) {
-	u32 tmp;
+void unpacking(uint8_t* out, uint32_t *in) {
+	uint32_t tmp;
 	SWAPMOVE(in[3], in[1], 0x03030303, 2);
 	SWAPMOVE(in[3], in[2], 0x03030303, 4);
 	SWAPMOVE(in[1], in[2], 0x0c0c0c0c, 2);
@@ -104,8 +102,8 @@ void unpacking(u8* out, u32 *in) {
 * 	2 6        3 7
 * 	3 7        4 0
 ******************************************************************************/
-void lfsr2_bs(u32* tk) {
-	u32 tmp;
+void lfsr2_bs(uint32_t* tk) {
+	uint32_t tmp;
 	tmp = tk[0] ^ (tk[2] & 0xaaaaaaaa);
 	tmp = ((tmp & 0xaaaaaaaa) >> 1) | ((tmp << 1) & 0xaaaaaaaa);
 	tk[0] = tk[1];
@@ -120,8 +118,8 @@ void lfsr2_bs(u32* tk) {
 * 	2 6        1 5
 * 	3 7        2 6
 ******************************************************************************/
-void lfsr3_bs(u32* tk) {
-	u32 tmp;
+void lfsr3_bs(uint32_t* tk) {
+	uint32_t tmp;
 	tmp = tk[3] ^ ((tk[1] & 0xaaaaaaaa) >> 1);
 	tmp = ((tmp & 0xaaaaaaaa) >> 1) | ((tmp << 1) & 0xaaaaaaaa);
 	tk[3] = tk[2];
@@ -133,8 +131,8 @@ void lfsr3_bs(u32* tk) {
 /******************************************************************************
 * Apply the permutation in a bitsliced manner, twice
 ******************************************************************************/
-void permute_tk_2(u32* tk) {
-	u32 tmp;
+void permute_tk_2(uint32_t* tk) {
+	uint32_t tmp;
 	for(int i =0; i < 4; i++) {
 		tmp = tk[i];
 		tk[i] = ROR(tmp,14) & 0xcc00cc00;
@@ -148,8 +146,8 @@ void permute_tk_2(u32* tk) {
 /******************************************************************************
 * Apply the permutation in a bitsliced manner, 4 times
 ******************************************************************************/
-void permute_tk_4(u32* tk) {
-	u32 tmp;
+void permute_tk_4(uint32_t* tk) {
+	uint32_t tmp;
 	for(int i =0; i < 4; i++) {
 		tmp = tk[i];
 		tk[i] = ROR(tmp,22) & 0xcc0000cc;
@@ -162,8 +160,8 @@ void permute_tk_4(u32* tk) {
 /******************************************************************************
 * Apply the permutation in a bitsliced manner, 6 times
 ******************************************************************************/
-void permute_tk_6(u32* tk) {
-	u32 tmp;
+void permute_tk_6(uint32_t* tk) {
+	uint32_t tmp;
 	for(int i =0; i < 4; i++) {
 		tmp = tk[i];
 		tk[i] = ROR(tmp,6) & 0xcccc0000;
@@ -177,8 +175,8 @@ void permute_tk_6(u32* tk) {
 /******************************************************************************
 * Apply the permutation in a bitsliced manner, 8 times
 ******************************************************************************/
-void permute_tk_8(u32* tk) {
-	u32 tmp;
+void permute_tk_8(uint32_t* tk) {
+	uint32_t tmp;
 	for(int i =0; i < 4; i++) {
 		tmp = tk[i];
 		tk[i] = ROR(tmp,24) & 0xcc000033;
@@ -191,8 +189,8 @@ void permute_tk_8(u32* tk) {
 /******************************************************************************
 * Apply the permutation in a bitsliced manner, 10 times
 ******************************************************************************/
-void permute_tk_10(u32* tk) {
-	u32 tmp;
+void permute_tk_10(uint32_t* tk) {
+	uint32_t tmp;
 	for(int i =0; i < 4; i++) {
 		tmp = tk[i];
 		tk[i] = ROR(tmp,8) & 0xcc330000;
@@ -206,8 +204,8 @@ void permute_tk_10(u32* tk) {
 /******************************************************************************
 * Apply the permutation in a bitsliced manner, 12 times
 ******************************************************************************/
-void permute_tk_12(u32* tk) {
-	u32 tmp;
+void permute_tk_12(uint32_t* tk) {
+	uint32_t tmp;
 	for(int i =0; i < 4; i++) {
 		tmp = tk[i];
 		tk[i] = ROR(tmp,8) & 0xcc33;
@@ -220,8 +218,8 @@ void permute_tk_12(u32* tk) {
 /******************************************************************************
 * Apply the permutation in a bitsliced manner, 14 times
 ******************************************************************************/
-void permute_tk_14(u32* tk) {
-	u32 tmp;
+void permute_tk_14(uint32_t* tk) {
+	uint32_t tmp;
 	for(int i =0; i < 4; i++) {
 		tmp = tk[i];
 		tk[i] = ROR(tmp,24) & 0x0033cc00;
@@ -235,8 +233,8 @@ void permute_tk_14(u32* tk) {
 /******************************************************************************
 * Precompute all LFSRs on TK2
 ******************************************************************************/
-void precompute_lfsr_tk2(u32* tk, const u8* key, const int rounds) {
-	u32 tk2[4];
+void precompute_lfsr_tk2(uint32_t* tk, const uint8_t* key, const int rounds) {
+	uint32_t tk2[4];
 	packing(tk2, key);
 	memcpy(tk, tk2, 16);
 	for(int i = 0 ; i < rounds; i+=2) {
@@ -248,8 +246,8 @@ void precompute_lfsr_tk2(u32* tk, const u8* key, const int rounds) {
 /******************************************************************************
 * Precompute all LFSRs on TK3
 ******************************************************************************/
-void precompute_lfsr_tk3(u32* tk, const u8* key, const int rounds) {
-	u32 tk3[4];
+void precompute_lfsr_tk3(uint32_t* tk, const uint8_t* key, const int rounds) {
+	uint32_t tk3[4];
 	packing(tk3, key);
 	tk[0] ^= tk3[0];
 	tk[1] ^= tk3[1];
@@ -266,11 +264,11 @@ void precompute_lfsr_tk3(u32* tk, const u8* key, const int rounds) {
 
 /******************************************************************************
 * XOR TK with TK1 before applying the permutations.
-* The key is then rearranged to match the barrel shiftrows representation.
+* The key is then rearranged to match the fixsliced representation.
 ******************************************************************************/
-void permute_tk(u32* tk, const u8* key, const int rounds) {
-	u32 test;
-	u32 tk1[4], tmp[4];
+void permute_tk(uint32_t* tk, const uint8_t* key, const int rounds) {
+	uint32_t test;
+	uint32_t tk1[4], tmp[4];
 	packing(tk1, key);
 	memcpy(tmp, tk, 16);
 	tmp[0] ^= tk1[0];
@@ -321,18 +319,18 @@ void permute_tk(u32* tk, const u8* key, const int rounds) {
 			permute_tk_6(tmp); 					//	applies P^6
 		else
 			permute_tk_14(tmp); 				// applies P^14
-		tk[i*4+20] = ROR(tmp[0], 10) & 0xc3c3c3c3;
-		tk[i*4+21] = ROR(tmp[1], 10) & 0xc3c3c3c3;
-		tk[i*4+22] = ROR(tmp[2], 10) & 0xc3c3c3c3;
-		tk[i*4+23] = ROR(tmp[3], 10) & 0xc3c3c3c3;
-		tk[i*4+24] = ROR(tmp[2],12) & 0x03030303;
-		tk[i*4+24] |= ROR(tmp[2],28) & 0x0c0c0c0c;
-		tk[i*4+25] = ROR(tmp[3],12) & 0x03030303;
-		tk[i*4+25] |= ROR(tmp[3],28) & 0x0c0c0c0c;
-		tk[i*4+26] = ROR(tmp[0],12) & 0x03030303;
-		tk[i*4+26] |= ROR(tmp[0],28) & 0x0c0c0c0c;
-		tk[i*4+27] = ROR(tmp[1],12) & 0x03030303;
-		tk[i*4+27] |= ROR(tmp[1],28) & 0x0c0c0c0c;
+		tk[i*4+20] 	= ROR(tmp[0], 10) & 0xc3c3c3c3;
+		tk[i*4+21] 	= ROR(tmp[1], 10) & 0xc3c3c3c3;
+		tk[i*4+22] 	= ROR(tmp[2], 10) & 0xc3c3c3c3;
+		tk[i*4+23] 	= ROR(tmp[3], 10) & 0xc3c3c3c3;
+		tk[i*4+24] 	= ROR(tmp[2], 12) & 0x03030303;
+		tk[i*4+24] |= ROR(tmp[2], 28) & 0x0c0c0c0c;
+		tk[i*4+25] 	= ROR(tmp[3], 12) & 0x03030303;
+		tk[i*4+25] |= ROR(tmp[3], 28) & 0x0c0c0c0c;
+		tk[i*4+26] 	= ROR(tmp[0], 12) & 0x03030303;
+		tk[i*4+26] |= ROR(tmp[0], 28) & 0x0c0c0c0c;
+		tk[i*4+27] 	= ROR(tmp[1], 12) & 0x03030303;
+		tk[i*4+27] |= ROR(tmp[1], 28) & 0x0c0c0c0c;
 		memcpy(tmp, tk+i*4+28, 16);
 		XOR_BLOCKS(tmp, tk1);
 		if (test)
@@ -351,13 +349,13 @@ void permute_tk(u32* tk, const u8* key, const int rounds) {
 }
 
 /******************************************************************************
-* Precompute LFSR2(TK2) ^ LFSR3(TK3) ^ rconst.
+ * Calculation of round tweakeys related to TK2 and TK3
 ******************************************************************************/
-void precompute_rtk2_3(u32* rtk, const u8* tk2, const u8 * tk3) {
+void tk_schedule_23(uint32_t* rtk, const uint8_t* tk2, const uint8_t * tk3) {
 	memset(rtk, 0x00, 16*SKINNY128_384_ROUNDS);
 	precompute_lfsr_tk2(rtk, tk2, SKINNY128_384_ROUNDS);
 	precompute_lfsr_tk3(rtk, tk3, SKINNY128_384_ROUNDS);
-	permute_tk(rtk, (u8*)(rtk+8), SKINNY128_384_ROUNDS);	// rtk+8 is NULL
+	permute_tk(rtk, (uint8_t*)(rtk+8), SKINNY128_384_ROUNDS);	// rtk+8 is NULL
 	for(int i = 0; i < SKINNY128_384_ROUNDS; i++) {			// add rconsts
 		for(int j = 0; j < 4; j++)
 			rtk[i*4+j] ^= rconst_32_bs[i*4+j];
@@ -365,9 +363,24 @@ void precompute_rtk2_3(u32* rtk, const u8* tk2, const u8 * tk3) {
 }
 
 /******************************************************************************
-* Precompute RTK1.
+ * Calculation of round tweakeys related to TK1 only.
 ******************************************************************************/
-void precompute_rtk1(u32* rtk1, const u8* tk1) {
+void tk_schedule_1(uint32_t* rtk1, const uint8_t* tk1) {
 	memset(rtk1, 0x00, 16*16);
 	permute_tk(rtk1, tk1, 16);
+}
+
+
+/******************************************************************************
+ * Calculation of round tweakeys related to TK1, TK2 and TK3 (full TK schedule)
+******************************************************************************/
+void tk_schedule_123(
+    uint32_t rtk_1[TKPERMORDER*BLOCKBYTES/4],
+    uint32_t rtk_23[SKINNY128_384_ROUNDS*BLOCKBYTES/4],
+    const uint8_t tk_1[TWEAKEYBYTES],
+    const uint8_t tk_2[TWEAKEYBYTES],
+    const uint8_t tk_3[TWEAKEYBYTES])
+{
+	tk_schedule_1(rtk_1, tk_1);
+    tk_schedule_23(rtk_23, tk_2, tk_3);
 }

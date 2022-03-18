@@ -349,9 +349,9 @@ void permute_tk(uint32_t* tk, const uint8_t* key, const int rounds) {
 }
 
 /******************************************************************************
-* Precompute LFSR2(TK2) ^ LFSR3(TK3) ^ rconst.
+ * Calculation of round tweakeys related to TK2 and TK3
 ******************************************************************************/
-void precompute_rtk2_3(uint32_t* rtk, const uint8_t* tk2, const uint8_t * tk3) {
+void tk_schedule_23(uint32_t* rtk, const uint8_t* tk2, const uint8_t * tk3) {
 	memset(rtk, 0x00, 16*SKINNY128_384_ROUNDS);
 	precompute_lfsr_tk2(rtk, tk2, SKINNY128_384_ROUNDS);
 	precompute_lfsr_tk3(rtk, tk3, SKINNY128_384_ROUNDS);
@@ -363,22 +363,27 @@ void precompute_rtk2_3(uint32_t* rtk, const uint8_t* tk2, const uint8_t * tk3) {
 }
 
 /******************************************************************************
-* Precompute RTK1.
+ * Calculation of round tweakeys related to TK1 only.
 ******************************************************************************/
-void precompute_rtk1(uint32_t* rtk1, const uint8_t* tk1) {
+void tk_schedule_1(uint32_t* rtk1, const uint8_t* tk1) {
 	memset(rtk1, 0x00, 16*16);
 	permute_tk(rtk1, tk1, 16);
 }
 
 /******************************************************************************
- * Calculation of round tweakeys related to TK1 only.
+ * Calculation of round tweakeys related to TK1, TK2 and TK3 (full TK schedule)
 ******************************************************************************/
-void tk_schedule_1(
+void tk_schedule_13(
     uint32_t rtk_1[TKPERMORDER*BLOCKBYTES/4],
-    const uint8_t tk_1[TWEAKEYBYTES])
+    uint32_t rtk_3[SKINNY128_384_ROUNDS*BLOCKBYTES/4],
+    const uint8_t tk_1[TWEAKEYBYTES],
+    const uint8_t tk_3[TWEAKEYBYTES])
 {
-    precompute_rtk1(rtk_1, tk_1);
-};
+	uint8_t tk2[TWEAKEYBYTES];
+	memset(tk2, 0x00, TWEAKEYBYTES);
+	tk_schedule_1(rtk_1, tk_1);
+    tk_schedule_23(rtk_3, tk2, tk_3);
+}
 
 /******************************************************************************
  * Calculation of round tweakeys related to TK1, TK2 and TK3 (full TK schedule)
@@ -390,6 +395,6 @@ void tk_schedule_123(
     const uint8_t tk_2[TWEAKEYBYTES],
     const uint8_t tk_3[TWEAKEYBYTES])
 {
-	precompute_rtk1(rtk_1, tk_1);
-    precompute_rtk2_3(rtk_23, tk_2, tk_3);
+	tk_schedule_1(rtk_1, tk_1);
+    tk_schedule_23(rtk_23, tk_2, tk_3);
 }

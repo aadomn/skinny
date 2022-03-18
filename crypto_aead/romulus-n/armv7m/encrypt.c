@@ -1,5 +1,5 @@
 /**
- * Romulus-M implementation following the SUPERCOP API.
+ * Romulus-N implementation following the SUPERCOP API.
  * 
  * @author      Alexandre Adomnicai
  *              alex.adomnicai@gmail.com

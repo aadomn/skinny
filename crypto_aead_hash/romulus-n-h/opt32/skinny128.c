@@ -26,8 +26,8 @@
 /******************************************************************************
 * The MixColumns computation for rounds i such that (i % 4) == 0
 ******************************************************************************/
-void mixcolumns_0(u32* state) {
-	u32 tmp;
+void mixcolumns_0(uint32_t* state) {
+	uint32_t tmp;
 	for(int i = 0; i < 4; i++) {
 		tmp = ROR(state[i],24) & 0x0c0c0c0c;
 		state[i] ^= ROR(tmp,30);
@@ -41,8 +41,8 @@ void mixcolumns_0(u32* state) {
 /******************************************************************************
 * The MixColumns computation for rounds i such that (i % 4) == 1
 ******************************************************************************/
-void mixcolumns_1(u32* state) {
-	u32 tmp;
+void mixcolumns_1(uint32_t* state) {
+	uint32_t tmp;
 	for(int i = 0; i < 4; i++) {
 		tmp = ROR(state[i],16) & 0x30303030;
 		state[i] ^= ROR(tmp,30);
@@ -56,8 +56,8 @@ void mixcolumns_1(u32* state) {
 /******************************************************************************
 * The MixColumns computation for rounds i such that (i % 4) == 2
 ******************************************************************************/
-void mixcolumns_2(u32* state) {
-	u32 tmp;
+void mixcolumns_2(uint32_t* state) {
+	uint32_t tmp;
 	for(int i = 0; i < 4; i++) {
 		tmp = ROR(state[i],8) & 0xc0c0c0c0;
 		state[i] ^= ROR(tmp,6);
@@ -71,8 +71,8 @@ void mixcolumns_2(u32* state) {
 /******************************************************************************
 * The MixColumns computation for rounds i such that (i % 4) == 3
 ******************************************************************************/
-void mixcolumns_3(u32* state) {
-	u32 tmp;
+void mixcolumns_3(uint32_t* state) {
+	uint32_t tmp;
 	for(int i = 0; i < 4; i++) {
 		tmp = state[i] & 0x03030303;
 		state[i] ^= ROR(tmp,30);
@@ -88,11 +88,13 @@ void mixcolumns_3(u32* state) {
 * RTK1 and RTK2_3 are given separately to take advantage of the fact that
 * TK2 and TK3 remains the same through the entire data encryption/decryption.
 ******************************************************************************/
-void skinny128_384_plus(u8* ctext, const u8* ptext, const u32* rtk1,  
-					const u32* rtk2_3) {
-	u32 tmp; 					// used in SWAPMOVE macro
-	u32 state[4]; 				// 128-bit state
-	packing(state, ptext); 		// from byte to bitsliced representation
+void skinny128_384_plus(
+	uint8_t* ctext, const uint8_t* ptext, 
+	const uint32_t* rtk1,  const uint32_t* rtk2_3)
+{
+	uint32_t tmp; 					// used in SWAPMOVE macro
+	uint32_t state[4]; 				// 128-bit state
+	packing(state, ptext); 			// from byte to bitsliced representation
 	QUADRUPLE_ROUND(state, rtk1, 	rtk2_3);
 	QUADRUPLE_ROUND(state, rtk1+16, rtk2_3+16);
 	QUADRUPLE_ROUND(state, rtk1+32, rtk2_3+32);
@@ -103,5 +105,5 @@ void skinny128_384_plus(u8* ctext, const u8* ptext, const u32* rtk1,
 	QUADRUPLE_ROUND(state, rtk1+48, rtk2_3+112);
 	QUADRUPLE_ROUND(state, rtk1, 	rtk2_3+128);
 	QUADRUPLE_ROUND(state, rtk1+16, rtk2_3+144);
-	unpacking(ctext, state);	// from bitsliced to byte representation
+	unpacking(ctext, state);		// from bitsliced to byte representation
 }

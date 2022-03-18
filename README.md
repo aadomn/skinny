@@ -12,6 +12,7 @@ This repository also provides implementations of the following variants of Romul
 
 - `crypto_aead/romulus-n`
 - `crypto_aead/romulus-m`
+- `crypto_aead/romulus-t`
 - `crypto_hash/romulus-h`
 - `crypto_aead_hash/romulus-n-h`
 - `crypto_aead/skinnyaead-m1`
@@ -22,7 +23,7 @@ Note that the goal of the `crypto_aead_hash` directory is to provide an implemen
 For each algorithm, one can find:
 
 - `opt32`: 32-bit word oriented C implementation  
-- `armcortexm`: ARM assembly implementation for Cortex-M processors.
+- `armv7m`: ARMv7-M assembly implementation for Cortex-M processors.
 
 Note that one can also find an implementation of SKINNY-128 using Intel SSE instructions in `crypto_tbc/skinny128/1_block/sse`.
 
