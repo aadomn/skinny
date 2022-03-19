@@ -1,34 +1,35 @@
-#include "skinny128.h"
-#include "tk_schedule.h"
-#include "romulus.h"
 #include <string.h>
 #include <stdlib.h>
-#include <stdio.h>
+#include <stdint.h>
+#include "skinny128.h"
+#include "tk_schedule.h"
+#include "crypto_hash.h"
 
 void hirose_128_128_256
 	(unsigned char* h,
 	 unsigned char* g,
 	 const unsigned char* m) {
 
-	unsigned char hh  [16];
+	uint8_t hh[BLOCKBYTES];
 	int i;
-    skinny_128_384_tks tks;
+    uint32_t rtk_1[BLOCKBYTES*SKINNY128_384_ROUNDS/4];
+    uint32_t rtk_23[BLOCKBYTES*SKINNY128_384_ROUNDS/4];
 
     // precompute the round tweakeys
-    precompute_rtk2_3(tks.rtk2_3, m, m+16);
-   	precompute_rtk1(tks.rtk1, g);
+    tk_schedule_23(rtk_23, m, m+BLOCKBYTES);
+   	tk_schedule_1(rtk_1, g);
 
-	for (i = 0; i < 16; i++) { 	// assign the key for the hirose compression function
+	for (i = 0; i < BLOCKBYTES; i++) { 	// assign the key for the hirose compression function
 		g[i]   = h[i];
 		hh[i]  = h[i];
 	}
 	g[0] ^= 0x01;
 
 	// run skinny-128-384+
-	skinny128_384_plus(h, h, tks.rtk1, tks.rtk2_3);
-	skinny128_384_plus(g, g, tks.rtk1, tks.rtk2_3);
+	skinny128_384_plus(h, h, rtk_1, rtk_23);
+	skinny128_384_plus(g, g, rtk_1, rtk_23);
 
-	for (i = 0; i < 16; i++) {
+	for (i = 0; i < BLOCKBYTES; i++) {
 		h[i] ^= hh[i];
 		g[i] ^= hh[i];
 	}
@@ -40,7 +41,7 @@ void initialize
 	 unsigned char* g) {
 
  	 unsigned char i;
-	for (i = 0; i < 16; i++) {
+	for (i = 0; i < BLOCKBYTES; i++) {
 		h[i] = 0;
 		g[i] = 0;
 	}
@@ -63,26 +64,26 @@ int crypto_hash
 	 const unsigned char *in,
 	 unsigned long long inlen) {
 
-	unsigned char h[16];
-	unsigned char g[16];
-	unsigned char p[32];
+	unsigned char h[BLOCKBYTES];
+	unsigned char g[BLOCKBYTES];
+	unsigned char p[2*BLOCKBYTES];
 	unsigned char i;
 
 	initialize(h,g);
 	
-	while (inlen >= 32) { // Normal loop
+	while (inlen >= 2*BLOCKBYTES) { // Normal loop
 		hirose_128_128_256(h,g,in);
-		in += 32;
-		inlen -= 32;
+		in += 2*BLOCKBYTES;
+		inlen -= 2*BLOCKBYTES;
 	}
 
-	pad(in,p,32,inlen);
+	pad(in,p,2*BLOCKBYTES,inlen);
 	h[0] ^= 2;
 	hirose_128_128_256(h,g,p);
 
-	for (i = 0; i < 16; i++) { // Assign the output tag
+	for (i = 0; i < BLOCKBYTES; i++) { // Assign the output tag
 		out[i] = h[i];
-		out[i+16] = g[i];
+		out[i+BLOCKBYTES] = g[i];
 	}
 	return 0;
 }

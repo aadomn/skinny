@@ -1,5 +1,5 @@
-#ifndef ROMULUSN_H_
-#define ROMULUSN_H_
+#ifndef ROMULUS_H_
+#define ROMULUS_H_
 
 #include "skinny128.h"
 
@@ -74,4 +74,4 @@ void romulusn_generate_tag(uint8_t *c, uint8_t *state);
 
 uint32_t romulusn_verify_tag(const uint8_t *tag, uint8_t *state);
 
-#endif  // ROMULUSN_H_
+#endif  // ROMULUS_H_

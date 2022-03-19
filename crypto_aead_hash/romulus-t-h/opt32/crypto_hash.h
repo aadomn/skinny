@@ -1,6 +1,1 @@
-
-int crypto_hash(
-	unsigned char *out,
-	const unsigned char *in,
-	unsigned long long inlen
-	);
+../../../crypto_hash/romulus-h/opt32/crypto_hash.h
