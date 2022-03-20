@@ -93,7 +93,7 @@ void romulusm_process_ad(
         UPDATE_CTR(tk1);
         XOR_BLOCK(state, state, ad);
         tk_schedule_123(rtk_1, rtk_23, tk1, ad+BLOCKBYTES, k);
-        skinny128_384_plus(state, state, rtk_23, rtk_1);
+        skinny128_384_plus(state, state, rtk_1, rtk_23);
         UPDATE_CTR(tk1);
         ad += 2*BLOCKBYTES;
         adlen -= 2*BLOCKBYTES;
@@ -103,7 +103,7 @@ void romulusm_process_ad(
         UPDATE_CTR(tk1);
         XOR_BLOCK(state, state, ad);
         tk_schedule_123(rtk_1, rtk_23, tk1, ad+BLOCKBYTES, k);
-        skinny128_384_plus(state, state, rtk_23, rtk_1);
+        skinny128_384_plus(state, state, rtk_1, rtk_23);
         UPDATE_CTR(tk1);
     } else if (adlen > BLOCKBYTES) {        // Left-over partial double block
         adlen -= BLOCKBYTES;
@@ -113,7 +113,7 @@ void romulusm_process_ad(
         zeroize(pad + adlen, 15 - adlen);
         pad[15] = adlen;                    // Padding
         tk_schedule_123(rtk_1, rtk_23, tk1, pad, k);
-        skinny128_384_plus(state, state, rtk_23, rtk_1);
+        skinny128_384_plus(state, state, rtk_1, rtk_23);
         UPDATE_CTR(tk1);
     } else {
         SET_DOMAIN(tk1, 0x2C);
@@ -127,7 +127,7 @@ void romulusm_process_ad(
         }
         if (mlen >= BLOCKBYTES) {
             tk_schedule_123(rtk_1, rtk_23, tk1, m, k);
-            skinny128_384_plus(state, state, rtk_23, rtk_1);
+            skinny128_384_plus(state, state, rtk_1, rtk_23);
             if (mlen > BLOCKBYTES)
                 UPDATE_CTR(tk1);
             mlen -= BLOCKBYTES;
@@ -137,7 +137,7 @@ void romulusm_process_ad(
             zeroize(pad + mlen, BLOCKBYTES - mlen - 1);
             pad[15] = (uint8_t)mlen;             // Padding
             tk_schedule_123(rtk_1, rtk_23, tk1, pad, k);
-            skinny128_384_plus(state, state, rtk_23, rtk_1);
+            skinny128_384_plus(state, state, rtk_1, rtk_23);
             mlen = 0;
         }
     }
@@ -147,7 +147,7 @@ void romulusm_process_ad(
         UPDATE_CTR(tk1);
         XOR_BLOCK(state, state, m);
         tk_schedule_123(rtk_1, rtk_23, tk1, m+BLOCKBYTES, k);
-        skinny128_384_plus(state, state, rtk_23, rtk_1);
+        skinny128_384_plus(state, state, rtk_1, rtk_23);
         UPDATE_CTR(tk1);
         m += 2 * BLOCKBYTES;
         mlen -= 2 * BLOCKBYTES;
@@ -157,7 +157,7 @@ void romulusm_process_ad(
         UPDATE_CTR(tk1);
         XOR_BLOCK(state, state, m);
         tk_schedule_123(rtk_1, rtk_23, tk1, m+BLOCKBYTES, k);
-        skinny128_384_plus(state, state, rtk_23, rtk_1);
+        skinny128_384_plus(state, state, rtk_1, rtk_23);
     } else if (mlen > BLOCKBYTES) {         // Last message double block is partial
         mlen -= BLOCKBYTES;
         UPDATE_CTR(tk1);
@@ -166,7 +166,7 @@ void romulusm_process_ad(
         zeroize(pad + mlen, BLOCKBYTES - mlen - 1);
         pad[15] = (uint8_t)mlen;                 // Padding
         tk_schedule_123(rtk_1, rtk_23, tk1, pad, k);
-        skinny128_384_plus(state, state, rtk_23, rtk_1);
+        skinny128_384_plus(state, state, rtk_1, rtk_23);
     } else if (mlen == BLOCKBYTES) {        // Last message single block is full
         XOR_BLOCK(state, state, m);
     } else if (mlen > 0) {                  // Last message single block is partial
@@ -178,7 +178,7 @@ void romulusm_process_ad(
     SET_DOMAIN(tk1, final_domain);
     UPDATE_CTR(tk1);
     tk_schedule_123(rtk_1, rtk_23, tk1, npub, k);
-    skinny128_384_plus(state, state, rtk_23, rtk_1);
+    skinny128_384_plus(state, state, rtk_1, rtk_23);
 }
 
 /**
@@ -204,7 +204,7 @@ void romulusm_process_msg(
         SET_DOMAIN(tk1, 0x24);
         while (inlen > BLOCKBYTES) {
             tk_schedule_1(rtk_1, tk1);
-            skinny128_384_plus(state, state, rtk_23, rtk_1);
+            skinny128_384_plus(state, state, rtk_1, rtk_23);
             if (mode == ENCRYPT_MODE)
                 RHO(state, out, in, tmp_blk);
             else
@@ -215,7 +215,7 @@ void romulusm_process_msg(
             inlen -= BLOCKBYTES;
         }
         tk_schedule_1(rtk_1, tk1);
-        skinny128_384_plus(state, state, rtk_23, rtk_1);
+        skinny128_384_plus(state, state, rtk_1, rtk_23);
         for(int i = 0; i < (int)inlen; i++) {
             tmp = in[i];                     // Use of tmp variable in case c = m
             out[i] = in[i] ^ (state[i] >> 1) ^ (state[i] & 0x80) ^ (state[i] << 7);

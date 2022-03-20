@@ -64,20 +64,10 @@ extern void tks_perm_23(
  * Input tk1 is expected to be in byte-wise representation while output round
  * tweakeys are in fixsliced representation.
  */
-extern void tks_perm_1(
+extern void tk_schedule_1(
 	uint8_t rtk_1[TKPERMORDER*BLOCKBYTES],
 	const uint8_t tk_1[TWEAKEYBYTES]
 );
-
-/**
- * Calculation of round tweakeys related to TK1 only.
- */
-inline void tk_schedule_1(
-    uint8_t rtk_1[TKPERMORDER*BLOCKBYTES],
-    const uint8_t tk_1[TWEAKEYBYTES])
-{
-    tks_perm_1(rtk_1, tk_1);
-};
 
 /**
  * Calculation of round tweakeys related to TK1 and TK3 only.
@@ -88,9 +78,21 @@ inline void tk_schedule_13(
     const uint8_t tk_1[TWEAKEYBYTES],
     const uint8_t tk_3[TWEAKEYBYTES])
 {
-    tks_perm_1(rtk_1, tk_1);
+    tk_schedule_1(rtk_1, tk_1);
     tks_lfsr_3(rtk_3, tk_3, SKINNY128_384_ROUNDS);
     tks_perm_23(rtk_3);
+};
+
+/**
+ * Calculation of round tweakeys related to TK1, TK2 and TK3 (full TK schedule)
+ */
+inline void tk_schedule_23(
+    uint8_t rtk_23[SKINNY128_384_ROUNDS*BLOCKBYTES],
+    const uint8_t tk_2[TWEAKEYBYTES],
+    const uint8_t tk_3[TWEAKEYBYTES])
+{
+    tks_lfsr_23(rtk_23, tk_2, tk_3, SKINNY128_384_ROUNDS);
+    tks_perm_23(rtk_23);
 };
 
 /**
@@ -103,7 +105,7 @@ inline void tk_schedule_123(
     const uint8_t tk_2[TWEAKEYBYTES],
     const uint8_t tk_3[TWEAKEYBYTES])
 {
-    tks_perm_1(rtk_1, tk_1);
+    tk_schedule_1(rtk_1, tk_1);
     tks_lfsr_23(rtk_23, tk_2, tk_3, SKINNY128_384_ROUNDS);
     tks_perm_23(rtk_23);
 };

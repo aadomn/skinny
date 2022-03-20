@@ -700,11 +700,11 @@ tks_perm_23:
 
 // Applies the permutations P^2, ..., P^14 to TK1 for rounds 0 to 16.
 // Since P^16=Id, we  don't need more calculations as no LFSR is applied to TK1
-@ void 	tks_perm_1(uint8_t* rtk1, const uint8_t* tk1)
-.global tks_perm_1
-.type   tks_perm_1,%function
+@ void 	tk_schedule_1(uint8_t* rtk1, const uint8_t* tk1)
+.global tk_schedule_1
+.type   tk_schedule_1,%function
 .align	2
-tks_perm_1:
+tk_schedule_1:
 	push 	{r0-r12, lr}
 	ldr.w 	r3, [r1, #8] 				//load tk1 (3rd word)
 	ldr.w 	r4, [r1, #4] 				//load tk1 (2nd word)

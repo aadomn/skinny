@@ -20,9 +20,7 @@ static void hirose_128_128_256
     uint8_t rtk_23[16*SKINNY128_384_ROUNDS];
 
     // precompute round tweakeys
-    tks_lfsr_23(rtk_23, m, m+BLOCKBYTES, SKINNY128_384_ROUNDS);
-    tks_perm_23(rtk_23);
-    tks_perm_1(rtk_1, g);
+    tk_schedule_123(rtk_1, rtk_23, g, m, m+BLOCKBYTES);
 
  	// assign the key for the hirose compression function
 	for (i = 0; i < BLOCKBYTES; i++) {
@@ -32,8 +30,8 @@ static void hirose_128_128_256
 	g[0] ^= 0x01;
 
 	// hirose compression function
-    skinny128_384_plus(h, h, rtk_23, rtk_1);
-    skinny128_384_plus(g, g, rtk_23, rtk_1);
+    skinny128_384_plus(h, h, rtk_1, rtk_23);
+    skinny128_384_plus(g, g, rtk_1, rtk_23);
 	for (i = 0; i < BLOCKBYTES; i++) {
 		h[i] ^= hh[i];
 		g[i] ^= hh[i];

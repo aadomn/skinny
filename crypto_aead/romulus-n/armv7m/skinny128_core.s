@@ -102,13 +102,13 @@ quadruple_round:
 	mixcol 	#4, #26, #0, #4, #4, #22
 	bx 		lr
 
-@ void 	skinny128_384_plus(u8* out, const u8* in, const u8* rtk23, const u8* rtk1)
+@ void 	skinny128_384_plus(u8* out, const u8* in, const u8* rtk_1, const u8* rtk_23)
 .global skinny128_384_plus
 .type   skinny128_384_plus,%function
 .align 2
 skinny128_384_plus:
 	push 	{r0-r12, r14}
-	mov.w 	r0, r3
+	mov.w 	r0, r2
 	// load input words
 	ldr.w 	r3, [r1, #8]
 	ldr.w 	r4, [r1, #4]
@@ -133,7 +133,7 @@ skinny128_384_plus:
 	movw 	r6, #0x5555
 	movt 	r6, #0x5555
 	// reload pointer to round tweakeys (erased when loading ptext)
-	ldr.w 	r1, [sp, #8]
+	ldr.w 	r1, [sp, #12]
 	// run 16 rounds
 	bl 		quadruple_round
 	bl 		quadruple_round

@@ -54,14 +54,14 @@ void romulusn_process_ad(
         UPDATE_CTR(tk1);
         SET_DOMAIN(tk1, 0x1A);
         tk_schedule_123(rtk_1, rtk_23, tk1, npub, k);
-        skinny128_384_plus(state, state, rtk_23, rtk_1);
+        skinny128_384_plus(state, state, rtk_1, rtk_23);
     } else {    // Process all double blocks except the last
         SET_DOMAIN(tk1, 0x08);
         while (adlen > 2*BLOCKBYTES) {
             UPDATE_CTR(tk1);
             XOR_BLOCK(state, state, ad);
             tk_schedule_123(rtk_1, rtk_23, tk1, ad + BLOCKBYTES, k);
-            skinny128_384_plus(state, state, rtk_23, rtk_1);
+            skinny128_384_plus(state, state, rtk_1, rtk_23);
             UPDATE_CTR(tk1);
             ad += 2*BLOCKBYTES;
             adlen -= 2*BLOCKBYTES;
@@ -71,7 +71,7 @@ void romulusn_process_ad(
         if (adlen == 2*BLOCKBYTES) {        // Left-over complete double block
             XOR_BLOCK(state, state, ad);
             tk_schedule_123(rtk_1, rtk_23, tk1, ad + BLOCKBYTES, k);
-            skinny128_384_plus(state, state, rtk_23, rtk_1);
+            skinny128_384_plus(state, state, rtk_1, rtk_23);
             UPDATE_CTR(tk1);
             SET_DOMAIN(tk1, 0x18);
         } else if (adlen > BLOCKBYTES) {    //  Left-over partial double block
@@ -81,7 +81,7 @@ void romulusn_process_ad(
             zeroize(pad + adlen, 15 - adlen);
             pad[15] = adlen;
             tk_schedule_123(rtk_1, rtk_23, tk1, pad, k);
-            skinny128_384_plus(state, state, rtk_23, rtk_1);
+            skinny128_384_plus(state, state, rtk_1, rtk_23);
             UPDATE_CTR(tk1);
             SET_DOMAIN(tk1, 0x1A);
         } else if (adlen == BLOCKBYTES) {   //  Left-over complete single block 
@@ -94,7 +94,7 @@ void romulusn_process_ad(
             SET_DOMAIN(tk1, 0x1A);
         }
         tk_schedule_123(rtk_1, rtk_23, tk1, npub, k);
-        skinny128_384_plus(state, state, rtk_23, rtk_1);
+        skinny128_384_plus(state, state, rtk_1, rtk_23);
     }
 }
 
@@ -116,7 +116,7 @@ void romulusn_process_msg(
         UPDATE_CTR(tk1);
         SET_DOMAIN(tk1, 0x15);
         tk_schedule_1(rtk_1, tk1);
-        skinny128_384_plus(state, state, rtk_23, rtk_1);
+        skinny128_384_plus(state, state, rtk_1, rtk_23);
     } else {        //process all blocks except the last
         SET_DOMAIN(tk1, 0x04);
         while (inlen > BLOCKBYTES) {
@@ -126,7 +126,7 @@ void romulusn_process_msg(
                 RHO_INV(state, in, out, tmp_blk);
             UPDATE_CTR(tk1);
             tk_schedule_1(rtk_1, tk1);
-            skinny128_384_plus(state, state, rtk_23, rtk_1);
+            skinny128_384_plus(state, state, rtk_1, rtk_23);
             out     += BLOCKBYTES;
             in      += BLOCKBYTES;
             inlen   -= BLOCKBYTES;
@@ -156,7 +156,7 @@ void romulusn_process_msg(
             SET_DOMAIN(tk1, 0x14);
         }
         tk_schedule_1(rtk_1, tk1);
-        skinny128_384_plus(state, state, rtk_23, rtk_1);
+        skinny128_384_plus(state, state, rtk_1, rtk_23);
     }
 }
 
