@@ -1,0 +1,1 @@
+../../../crypto_hash/romulus-h/armv7a/hash.c
