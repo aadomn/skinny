@@ -53,20 +53,10 @@ extern void tks_perm_23(
  * Input tk1 is expected to be in byte-wise representation while output round
  * tweakeys are in fixsliced representation.
  */
-extern void tks_perm_1(
+extern void tk_schedule_1(
     uint8_t rtk_1[TKPERMORDER*BLOCKBYTES/2],
     const uint8_t tk_1[TWEAKEYBYTES]
 );
-
-/**
- * Calculation of round tweakeys related to TK1 only.
- */
-inline void tk_schedule_1(
-    uint8_t rtk_1[TKPERMORDER*BLOCKBYTES/2],
-    const uint8_t tk_1[TWEAKEYBYTES])
-{
-    tks_perm_1(rtk_1, tk_1);
-};
 
 /**
  * Calculation of round tweakeys related to TK1, TK2 and TK3 (full TK schedule)
