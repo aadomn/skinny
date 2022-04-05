@@ -6,7 +6,8 @@
  * 
  * @date        March 2022
  */
- #include "skinny128.h"
+#include "skinny128.h"
+#include "crypto_hash.h"
 
 static void hirose_128_128_256(
   unsigned char h[],
