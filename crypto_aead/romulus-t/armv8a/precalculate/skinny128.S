@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Aarch64 NEON implementation of Skinny-128-384+ fine tuned for Romulus AEAD.
+ * ARMv8-A NEON implementation of Skinny-128-384+ fine tuned for Romulus-T AEAD.
  * 
  * @author	Alexandre Adomnicai
  *		alex.adomnicai@gmail.com
  *
- * @date 	January 2022
+ * @date 	March 2022
  ******************************************************************************/
 
 .text
@@ -143,8 +143,8 @@ rconst:
  * 128-bit registers.
  ******************************************************************************/
 .macro dbl_tk_update
-	tbl 	v1.16b, {v1.16b}, v31.16b 	// permuting tk2
-	tbl 	v0.16b, {v0.16b}, v31.16b 	// permuting tk1
+	tbl 	v1.16b, {v1.16b}, v31.16b 	// permuting tk3
+	tbl 	v0.16b, {v0.16b}, v31.16b 	// permuting tk2
 	ldr 	x3, [x1], #8 				// load rconsts (1st round)
 	ushr 	v3.16b, v1.16b, #6 			// [LFSR3]
 	ushr 	v2.16b, v1.16b, #1 			// [LFSR3] (d5 & 0xee..ee) >> 1

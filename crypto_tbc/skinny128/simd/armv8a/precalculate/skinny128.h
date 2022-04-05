@@ -10,7 +10,7 @@
  * be precomputed for TK2 and TK3.
  */
 void skinny128_384_plus(
-	uint8_t in[BLOCKBYTES], const uint8_t out[BLOCKBYTES],
+	uint8_t out[BLOCKBYTES], const uint8_t in[BLOCKBYTES],
 	const uint8_t tk1[TWEAKEYBYTES],
 	const uint8_t rtk_23[SKINNY128_384_ROUNDS*BLOCKBYTES/2]);
 
