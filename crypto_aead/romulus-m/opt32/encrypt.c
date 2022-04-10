@@ -29,7 +29,7 @@ int crypto_aead_encrypt
     romulusm_process_ad(state, ad, adlen, m, mlen, rtk_23, tk1, npub, k);
     romulusm_generate_tag(c + mlen, state);
     romulusm_process_msg(c, m, mlen, state, rtk_23, tk1, ENCRYPT_MODE);
-    zeroize(rtk_23, sizeof(rtk_23));
+    zeroize((uint8_t *)rtk_23, sizeof(rtk_23));
     return 0;
 }
 
@@ -57,6 +57,6 @@ int crypto_aead_decrypt
     romulusm_process_msg(m, c, clen, state, rtk_23, tk1, DECRYPT_MODE);
     romulusm_init(state, tk1);  
     romulusm_process_ad(state, ad, adlen, m, clen, rtk_23, tk1, npub, k);
-    zeroize(rtk_23, sizeof(rtk_23));
+    zeroize((uint8_t *)rtk_23, sizeof(rtk_23));
     return romulusm_verify_tag(c + *mlen, state);
 }
