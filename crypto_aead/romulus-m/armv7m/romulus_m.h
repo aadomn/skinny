@@ -59,6 +59,8 @@
     XOR_BLOCK(x, x, z);             \
 })
 
+void zeroize(uint8_t buf[], int buflen);
+
 // Romulus-M core functions defined in 'romulus_m.c'
 void romulusm_init(uint8_t *state, uint8_t *tk1);
 

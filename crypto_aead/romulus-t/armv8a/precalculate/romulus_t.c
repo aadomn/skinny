@@ -35,6 +35,7 @@ static void hirose_128_128_256(
   skinny128_384_plus(tmp, h, g, rtk_23);
   h[0] ^= 0x01;
   skinny128_384_plus(g, h, g, rtk_23);
+  zeroize(rtk_23, SKINNY128_384_ROUNDS*BLOCKBYTES/2);
   for (i = 0; i < BLOCKBYTES; i++) {
     g[i] ^= h[i];
     h[i] ^= tmp[i];
@@ -236,6 +237,7 @@ void romulust_kdf(
 	SET_DOMAIN(tk1, 0x42);
   tk_schedule_3(rtk_3, k);
 	skinny128_384_plus(state, npub, tk1, rtk_3);
+  zeroize(rtk_3, SKINNY128_384_ROUNDS*BLOCKBYTES/2);
   tk1[0] = 0x01;  // init counter
 }
 
@@ -270,6 +272,7 @@ void romulust_process_msg(
   SET_DOMAIN(tk1, 0x40);
   tk_schedule_3(rtk_3, state);
   skinny128_384_plus(out, npub, tk1, rtk_3);
+  zeroize(rtk_3, SKINNY128_384_ROUNDS*BLOCKBYTES/2);
   UPDATE_CTR(tk1);
 	for(i = 0; i < mlen; i++)
 		c[i] = m[i] ^ out[i];
@@ -298,4 +301,5 @@ void romulust_generate_tag(
   SET_DOMAIN(tk1, 0x44);
   tk_schedule_23(rtk_23, hash+BLOCKBYTES, k);
   skinny128_384_plus(tag, hash, tk1, rtk_23);
+  zeroize(rtk_23, SKINNY128_384_ROUNDS*BLOCKBYTES/2);
 }

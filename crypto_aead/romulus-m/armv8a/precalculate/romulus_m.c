@@ -10,16 +10,6 @@
 #include "skinny128.h"
 
 /**
- * Equivalent to 'memset(buf, 0x00, buflen)'.
- */
-static void zeroize(uint8_t buf[], int buflen)
-{
-  int i;
-  for(i = 0; i < buflen; i++)
-    buf[i] = 0x00;
-}
-
-/**
  * Equivalent to 'copy(dest, src, srclen)'.
  */
 static void copy(uint8_t dest[], const uint8_t src[], int srclen)
@@ -27,6 +17,16 @@ static void copy(uint8_t dest[], const uint8_t src[], int srclen)
   int i;
   for(i = 0; i < srclen; i++)
     dest[i] = src[i];
+}
+
+/**
+ * Equivalent to 'memset(buf, 0x00, buflen)'.
+ */
+void zeroize(uint8_t buf[], int buflen)
+{
+  int i;
+  for(i = 0; i < buflen; i++)
+    buf[i] = 0x00;
 }
 
 /**

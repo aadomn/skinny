@@ -32,6 +32,10 @@ static void hirose_128_128_256
 	// hirose compression function
     skinny128_384_plus(h, h, rtk_1, rtk_23);
     skinny128_384_plus(g, g, rtk_1, rtk_23);
+
+    for(i = 0; i < 16*SKINNY128_384_ROUNDS; i++)
+    	rtk_23[i] = 0x00;
+
 	for (i = 0; i < BLOCKBYTES; i++) {
 		h[i] ^= hh[i];
 		g[i] ^= hh[i];

@@ -22,6 +22,10 @@ static void hirose_128_128_256(
   skinny128_384_plus(tmp, h, g, rtk_23);
   h[0] ^= 0x01;
   skinny128_384_plus(g, h, g, rtk_23);
+
+  for(i = 0;  i < SKINNY128_384_ROUNDS*BLOCKBYTES/2; i++)
+  	rtk_23[i] = 0x00;
+
   for (i = 0; i < BLOCKBYTES; i++) {
     g[i] ^= h[i];
     h[i] ^= tmp[i];
