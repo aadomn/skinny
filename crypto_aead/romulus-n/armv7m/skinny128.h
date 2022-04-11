@@ -80,7 +80,7 @@ inline void tk_schedule_123(
     const uint8_t tk_2[TWEAKEYBYTES],
     const uint8_t tk_3[TWEAKEYBYTES])
 {
-    tks_perm_1(rtk_1, tk_1);
+    tks_schedule_1(rtk_1, tk_1);
     tks_lfsr_23(rtk_23, tk_2, tk_3, SKINNY128_384_ROUNDS);
     tks_perm_23(rtk_23);
 };

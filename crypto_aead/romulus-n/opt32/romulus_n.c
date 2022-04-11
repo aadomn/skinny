@@ -11,7 +11,7 @@
 /**
  * Equivalent to 'memset(buf, 0x00, buflen)'.
  */
-static void zeroize(uint8_t buf[], int buflen)
+void zeroize(uint8_t buf[], int buflen)
 {
   int i;
   for(i = 0; i < buflen; i++)

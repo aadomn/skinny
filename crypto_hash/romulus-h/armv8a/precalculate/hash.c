@@ -35,9 +35,9 @@ static void hirose_128_128_256(
 
 void initialize
 	(unsigned char* h,
-	 unsigned char* g) {
-
- 	 unsigned char i;
+	 unsigned char* g)
+{
+	unsigned char i;
 	for (i = 0; i < BLOCKBYTES; i++) {
 		h[i] = 0;
 		g[i] = 0;
