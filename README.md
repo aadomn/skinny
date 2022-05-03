@@ -4,8 +4,8 @@
 
 This repository provides efficient constant-time software implementations of Skinny-128 on various platforms.
 The implementations are aimed to be used in sequential operating modes. For parallel modes of operation, there is a very fast [bitsliced AVX2 implementation](https://github.com/kste/skinny_avx) from Stefan Kölbl which processes 64 128-bit blocks at a time (i.e. 1KiB).
-This repositories contain two types of implementations:
-* Optimized bitsliced (or *fixsliced*), detailed in [Fixslicing AES-like Ciphers](https://eprint.iacr.org/2020/1123.pdf) and [Fixslicing: Application to Some NIST LWC Round 2 Candidates](https://csrc.nist.gov/CSRC/media/Events/lightweight-cryptography-workshop-2020/documents/papers/fixslicing-lwc2020.pdf), which process either
+This repository contains two types of implementations:
+* Optimized bitsliced (or *fixsliced*), detailed in [Fixslicing AES-like Ciphers](https://eprint.iacr.org/2020/1123.pdf) and [Fixslicing: Application to Some NIST LWC Round 2 Candidates](https://csrc.nist.gov/CSRC/media/Events/lightweight-cryptography-workshop-2020/documents/papers/fixslicing-lwc2020.pdf), which processes either
     * a single block at a time (`crypto_tbc/skinny128/bitsliced/1_block`)
     * two blocks at a time (`crypto_tbc/skinny128/bitsliced/2_blocks`) which can be useful for redundant computations against fault attacks
 * Byte-wise SIMD, detailed in [Fast Skinny-128 SIMD Implementations for Sequential Modes of Operation](), which process a single block at a time and are written for 3 different platforms with SIMD units
