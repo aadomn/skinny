@@ -8,7 +8,7 @@ This repository contains two types of implementations:
 * Optimized bitsliced (or *fixsliced*), detailed in [Fixslicing AES-like Ciphers](https://eprint.iacr.org/2020/1123.pdf) and [Fixslicing: Application to Some NIST LWC Round 2 Candidates](https://csrc.nist.gov/CSRC/media/Events/lightweight-cryptography-workshop-2020/documents/papers/fixslicing-lwc2020.pdf), which processes either
     * a single block at a time (`crypto_tbc/skinny128/bitsliced/1_block`)
     * two blocks at a time (`crypto_tbc/skinny128/bitsliced/2_blocks`) which can be useful for redundant computations against fault attacks
-* Byte-wise SIMD, detailed in [Fast Skinny-128 SIMD Implementations for Sequential Modes of Operation](), which process a single block at a time and are written for 3 different platforms with SIMD units
+* Byte-wise SIMD, detailed in [Fast Skinny-128 SIMD Implementations for Sequential Modes of Operation](https://eprint.iacr.org/2022/578.pdf), which process a single block at a time and are written for 3 different platforms with SIMD units
     * ARMv7-A (`crypto_tbc/skinny128/simd/armv7a`)
     * ARMv8-A (`crypto_tbc/skinny128/simd/armv8a`)
     * x86 SSSE3 (`crypto_tbc/skinny128/simd/x86`)
@@ -33,4 +33,4 @@ For each algorithm, one can find:
 - `armv8a`: ARMv8-A assembly implementation for AArch64 Cortex-A processors.
 - `x86`: SSSE3 intrinsics implementation for x86 processors with support of SSSE3 instructions.
 
-Note that the Romulus implementations have also been submitted to the [SUPERCOP benchmarking suite](https://bench.cr.yp.to/index.html).
+Note that the Romulus implementations have also been submitted to the [eBACS benchmarking suite](https://bench.cr.yp.to/index.html).
