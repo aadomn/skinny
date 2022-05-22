@@ -138,11 +138,11 @@ void permute_tk_2(u32* tk) {
 	u32 tmp;
 	for(int i =0; i < 4; i++) {
 		tmp = tk[i];
-		tk[i] = ROR(tmp,14) & 0xcc00cc00;
+		tk[i]  = ROR(tmp, 14) & 0xcc00cc00;
 		tk[i] |= (tmp & 0x000000ff) << 16;
-		tk[i] |= (tmp & 0xcc000000)>> 2;
-		tk[i] |= (tmp & 0x0033cc00) >> 8;
-		tk[i] |= (tmp & 0x00cc0000) >>18;
+		tk[i] |= (tmp & 0xcc000000) >>  2;
+		tk[i] |= (tmp & 0x0033cc00) >>  8;
+		tk[i] |= (tmp & 0x00cc0000) >> 18;
 	}
 }
 
@@ -153,8 +153,8 @@ void permute_tk_4(u32* tk) {
 	u32 tmp;
 	for(int i =0; i < 4; i++) {
 		tmp = tk[i];
-		tk[i] = ROR(tmp,22) & 0xcc0000cc;
-		tk[i] |= ROR(tmp,16) & 0x3300cc00;
+		tk[i]  = ROR(tmp, 22) & 0xcc0000cc;
+		tk[i] |= ROR(tmp, 16) & 0x3300cc00;
 		tk[i] |= ROR(tmp, 24) & 0x00cc3300;
 		tk[i] |= (tmp & 0x00cc00cc) >> 2;
 	}
@@ -167,9 +167,9 @@ void permute_tk_6(u32* tk) {
 	u32 tmp;
 	for(int i =0; i < 4; i++) {
 		tmp = tk[i];
-		tk[i] = ROR(tmp,6) & 0xcccc0000;
-		tk[i] |= ROR(tmp,24) & 0x330000cc;
-		tk[i] |= ROR(tmp,10) & 0x3333;
+		tk[i]  = ROR(tmp,  6) & 0xcccc0000;
+		tk[i] |= ROR(tmp, 24) & 0x330000cc;
+		tk[i] |= ROR(tmp, 10) & 0x00003333;
 		tk[i] |= (tmp & 0xcc) << 14;
 		tk[i] |= (tmp & 0x3300) << 2;
 	}
@@ -182,9 +182,9 @@ void permute_tk_8(u32* tk) {
 	u32 tmp;
 	for(int i =0; i < 4; i++) {
 		tmp = tk[i];
-		tk[i] = ROR(tmp,24) & 0xcc000033;
-		tk[i] |= ROR(tmp,8) & 0x33cc0000;
-		tk[i] |= ROR(tmp,26) & 0x00333300;
+		tk[i]  = ROR(tmp, 24) & 0xcc000033;
+		tk[i] |= ROR(tmp,  8) & 0x33cc0000;
+		tk[i] |= ROR(tmp, 26) & 0x00333300;
 		tk[i] |= (tmp & 0x00333300) >> 6;
 	}
 }
@@ -196,9 +196,9 @@ void permute_tk_10(u32* tk) {
 	u32 tmp;
 	for(int i =0; i < 4; i++) {
 		tmp = tk[i];
-		tk[i] = ROR(tmp,8) & 0xcc330000;
-		tk[i] |= ROR(tmp,26) & 0x33000033;
-		tk[i] |= ROR(tmp,22) & 0x00cccc00;
+		tk[i]  = ROR(tmp,  8) & 0xcc330000;
+		tk[i] |= ROR(tmp, 26) & 0x33000033;
+		tk[i] |= ROR(tmp, 22) & 0x00cccc00;
 		tk[i] |= (tmp & 0x00330000) >> 14;
 		tk[i] |= (tmp & 0xcc00) >> 2;
 	}
@@ -211,10 +211,10 @@ void permute_tk_12(u32* tk) {
 	u32 tmp;
 	for(int i =0; i < 4; i++) {
 		tmp = tk[i];
-		tk[i] = ROR(tmp,8) & 0xcc33;
-		tk[i] |= ROR(tmp,30) & 0x00cc00cc;
-		tk[i] |= ROR(tmp,10) & 0x33330000;
-		tk[i] |= ROR(tmp,16) & 0xcc003300;
+		tk[i]  = ROR(tmp,  8) & 0x0000cc33;
+		tk[i] |= ROR(tmp, 30) & 0x00cc00cc;
+		tk[i] |= ROR(tmp, 10) & 0x33330000;
+		tk[i] |= ROR(tmp, 16) & 0xcc003300;
 	}
 }
 
@@ -225,11 +225,11 @@ void permute_tk_14(u32* tk) {
 	u32 tmp;
 	for(int i =0; i < 4; i++) {
 		tmp = tk[i];
-		tk[i] = ROR(tmp,24) & 0x0033cc00;
-		tk[i] |= ROR(tmp,14) & 0x00cc0000;
-		tk[i] |= ROR(tmp,30) & 0xcc000000;
-		tk[i] |= ROR(tmp,16) & 0x000000ff;
-		tk[i] |= ROR(tmp,18) & 0x33003300;
+		tk[i]  = ROR(tmp, 24) & 0x0033cc00;
+		tk[i] |= ROR(tmp, 14) & 0x00cc0000;
+		tk[i] |= ROR(tmp, 30) & 0xcc000000;
+		tk[i] |= ROR(tmp, 16) & 0x000000ff;
+		tk[i] |= ROR(tmp, 18) & 0x33003300;
 	}
 }
 
@@ -285,7 +285,7 @@ void permute_tk(u32* tk, const u8* key, const int rounds) {
 	tmp[3] = tk[3] ^ tk1[3];
 	for(int i = 0 ; i < rounds; i += 8) {
 		test = (i % 16 < 8) ? 1 : 0; 			//to apply the right power of P
-		tk[i*4] = tmp[2] & 0xf0f0f0f0;
+		tk[i*4]   = tmp[2] & 0xf0f0f0f0;
 		tk[i*4+1] = tmp[3] & 0xf0f0f0f0;
 		tk[i*4+2] = tmp[0] & 0xf0f0f0f0;
 		tk[i*4+3] = tmp[1] & 0xf0f0f0f0;
@@ -297,17 +297,17 @@ void permute_tk(u32* tk, const u8* key, const int rounds) {
 			permute_tk_2(tmp); 					// applies P^2
 		else
 			permute_tk_10(tmp); 				// applies P^10
-		tk[i*4+4] = ROR(tmp[0],26) & 0xc3c3c3c3;
-		tk[i*4+5] = ROR(tmp[1],26) & 0xc3c3c3c3;
-		tk[i*4+6] = ROR(tmp[2],26) & 0xc3c3c3c3;
-		tk[i*4+7] = ROR(tmp[3],26) & 0xc3c3c3c3;
-		tk[i*4+8] = ROR(tmp[2],28) & 0x03030303;
-		tk[i*4+8] |= ROR(tmp[2],12) & 0x0c0c0c0c;
-		tk[i*4+9] = ROR(tmp[3],28) & 0x03030303;
-		tk[i*4+9] |= ROR(tmp[3],12) & 0x0c0c0c0c;
-		tk[i*4+10] = ROR(tmp[0],28) & 0x03030303;
+		tk[i*4+ 4]  = ROR(tmp[0],26) & 0xc3c3c3c3;
+		tk[i*4+ 5]  = ROR(tmp[1],26) & 0xc3c3c3c3;
+		tk[i*4+ 6]  = ROR(tmp[2],26) & 0xc3c3c3c3;
+		tk[i*4+ 7]  = ROR(tmp[3],26) & 0xc3c3c3c3;
+		tk[i*4+ 8]  = ROR(tmp[2],28) & 0x03030303;
+		tk[i*4+ 8] |= ROR(tmp[2],12) & 0x0c0c0c0c;
+		tk[i*4+ 9]  = ROR(tmp[3],28) & 0x03030303;
+		tk[i*4+ 9] |= ROR(tmp[3],12) & 0x0c0c0c0c;
+		tk[i*4+10]  = ROR(tmp[0],28) & 0x03030303;
 		tk[i*4+10] |= ROR(tmp[0],12) & 0x0c0c0c0c;
-		tk[i*4+11] = ROR(tmp[1],28) & 0x03030303;
+		tk[i*4+11]  = ROR(tmp[1],28) & 0x03030303;
 		tk[i*4+11] |= ROR(tmp[1],12) & 0x0c0c0c0c;
 		tmp[0] = tk[i*4+12] ^ tk1[0];
 		tmp[1] = tk[i*4+13] ^ tk1[1];
@@ -318,8 +318,8 @@ void permute_tk(u32* tk, const u8* key, const int rounds) {
 		else
 			permute_tk_12(tmp); 				// applies P^12
 		for(int j = 0; j < 4; j++) {
-			tk[i*4+12+j] = ROR(tmp[j],14) & 0x30303030;
-			tk[i*4+12+j] |= ROR(tmp[j],6) & 0x0c0c0c0c;
+			tk[i*4+12+j]  = ROR(tmp[j],14) & 0x30303030;
+			tk[i*4+12+j] |= ROR(tmp[j], 6) & 0x0c0c0c0c;
 		}
 		tk[i*4+16] = ROR(tmp[2], 16) & 0xf0f0f0f0;
 		tk[i*4+17] = ROR(tmp[3], 16) & 0xf0f0f0f0;
@@ -333,18 +333,18 @@ void permute_tk(u32* tk, const u8* key, const int rounds) {
 			permute_tk_6(tmp); 					//	applies P^6
 		else
 			permute_tk_14(tmp); 				// applies P^14
-		tk[i*4+20] = ROR(tmp[0], 10) & 0xc3c3c3c3;
-		tk[i*4+21] = ROR(tmp[1], 10) & 0xc3c3c3c3;
-		tk[i*4+22] = ROR(tmp[2], 10) & 0xc3c3c3c3;
-		tk[i*4+23] = ROR(tmp[3], 10) & 0xc3c3c3c3;
-		tk[i*4+24] = ROR(tmp[2],12) & 0x03030303;
-		tk[i*4+24] |= ROR(tmp[2],28) & 0x0c0c0c0c;
-		tk[i*4+25] = ROR(tmp[3],12) & 0x03030303;
-		tk[i*4+25] |= ROR(tmp[3],28) & 0x0c0c0c0c;
-		tk[i*4+26] = ROR(tmp[0],12) & 0x03030303;
-		tk[i*4+26] |= ROR(tmp[0],28) & 0x0c0c0c0c;
-		tk[i*4+27] = ROR(tmp[1],12) & 0x03030303;
-		tk[i*4+27] |= ROR(tmp[1],28) & 0x0c0c0c0c;
+		tk[i*4+20]  = ROR(tmp[0], 10) & 0xc3c3c3c3;
+		tk[i*4+21]  = ROR(tmp[1], 10) & 0xc3c3c3c3;
+		tk[i*4+22]  = ROR(tmp[2], 10) & 0xc3c3c3c3;
+		tk[i*4+23]  = ROR(tmp[3], 10) & 0xc3c3c3c3;
+		tk[i*4+24]  = ROR(tmp[2], 12) & 0x03030303;
+		tk[i*4+24] |= ROR(tmp[2], 28) & 0x0c0c0c0c;
+		tk[i*4+25]  = ROR(tmp[3], 12) & 0x03030303;
+		tk[i*4+25] |= ROR(tmp[3], 28) & 0x0c0c0c0c;
+		tk[i*4+26]  = ROR(tmp[0], 12) & 0x03030303;
+		tk[i*4+26] |= ROR(tmp[0], 28) & 0x0c0c0c0c;
+		tk[i*4+27]  = ROR(tmp[1], 12) & 0x03030303;
+		tk[i*4+27] |= ROR(tmp[1], 28) & 0x0c0c0c0c;
 		tmp[0] = tk[i*4+28] ^ tk1[0];
 		tmp[1] = tk[i*4+29] ^ tk1[1];
 		tmp[2] = tk[i*4+30] ^ tk1[2];
@@ -352,7 +352,7 @@ void permute_tk(u32* tk, const u8* key, const int rounds) {
 		if (test)
 			permute_tk_8(tmp); 					// applies P^8
 		for(int j = 0; j < 4; j++) {
-			tk[i*4+28+j] = ROR(tmp[j],30) & 0x30303030;
+			tk[i*4+28+j]  = ROR(tmp[j],30) & 0x30303030;
 			tk[i*4+28+j] |= ROR(tmp[j],22) & 0x0c0c0c0c;
 		}
 		if (test && (i+8 < rounds)) { 			//only if next loop iteration

@@ -13,7 +13,9 @@
 * within the Sbox is not computed, the bit ordering is synchronized with the 
 * classical representation after 2 calls.
 *
-* For more details, see the paper at: https://
+* For more details, see the papers at:
+* https://eprint.iacr.org/2020/1123.pdf
+* https://csrc.nist.gov/CSRC/media/Events/lightweight-cryptography-workshop-2020/documents/papers/fixslicing-lwc2020.pdf
 *
 * @author	Alexandre Adomnicai, Nanyang Technological University,
 *			alexandre.adomnicai@ntu.edu.sg

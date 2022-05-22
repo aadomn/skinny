@@ -10,7 +10,9 @@
 * on code size, we compute the permutation every 4 rounds. Therefore, this
 * implementation relies on a "QUADRUPLE_ROUND" routine.
 *
-* For more details, see the paper at: https://
+* For more details, see the papers at:
+* https://eprint.iacr.org/2020/1123.pdf
+* https://csrc.nist.gov/CSRC/media/Events/lightweight-cryptography-workshop-2020/documents/papers/fixslicing-lwc2020.pdf
 *
 * @author	Alexandre Adomnicai, Nanyang Technological University,
 *			alexandre.adomnicai@ntu.edu.sg

@@ -1,7 +1,8 @@
 /*******************************************************************************
 * Implementation of the tweakey schedule to match the fixsliced representation.
 * 
-* For more details, see the paper at: https://
+* For more details, see the paper at:
+* https://csrc.nist.gov/CSRC/media/Events/lightweight-cryptography-workshop-2020/documents/papers/fixslicing-lwc2020.pdf
 *
 * @author	Alexandre Adomnicai, Nanyang Technological University,
 *			alexandre.adomnicai@ntu.edu.sg
@@ -386,11 +387,11 @@ void permute_tk_2(u32* tk) {
 	u32 tmp;
 	for(int i =0; i < 8; i++) {
 		tmp = tk[i];
-		tk[i] = ROR(tmp,14) & 0xcc00cc00;
+		tk[i]  = ROR(tmp, 14) & 0xcc00cc00;
 		tk[i] |= (tmp & 0x000000ff) << 16;
-		tk[i] |= (tmp & 0xcc000000)>> 2;
-		tk[i] |= (tmp & 0x0033cc00) >> 8;
-		tk[i] |= (tmp & 0x00cc0000) >>18;
+		tk[i] |= (tmp & 0xcc000000) >>  2;
+		tk[i] |= (tmp & 0x0033cc00) >>  8;
+		tk[i] |= (tmp & 0x00cc0000) >> 18;
 	}
 }
 
@@ -401,8 +402,8 @@ void permute_tk_4(u32* tk) {
 	u32 tmp;
 	for(int i =0; i < 8; i++) {
 		tmp = tk[i];
-		tk[i] = ROR(tmp,22) & 0xcc0000cc;
-		tk[i] |= ROR(tmp,16) & 0x3300cc00;
+		tk[i]  = ROR(tmp, 22) & 0xcc0000cc;
+		tk[i] |= ROR(tmp, 16) & 0x3300cc00;
 		tk[i] |= ROR(tmp, 24) & 0x00cc3300;
 		tk[i] |= (tmp & 0x00cc00cc) >> 2;
 	}
@@ -415,10 +416,10 @@ void permute_tk_6(u32* tk) {
 	u32 tmp;
 	for(int i =0; i < 8; i++) {
 		tmp = tk[i];
-		tk[i] = ROR(tmp,6) & 0xcccc0000;
-		tk[i] |= ROR(tmp,24) & 0x330000cc;
-		tk[i] |= ROR(tmp,10) & 0x3333;
-		tk[i] |= (tmp & 0xcc) << 14;
+		tk[i]  = ROR(tmp,  6) & 0xcccc0000;
+		tk[i] |= ROR(tmp, 24) & 0x330000cc;
+		tk[i] |= ROR(tmp, 10) & 0x00003333;
+		tk[i] |= (tmp & 0x00cc) << 14;
 		tk[i] |= (tmp & 0x3300) << 2;
 	}
 }
@@ -430,9 +431,9 @@ void permute_tk_8(u32* tk) {
 	u32 tmp;
 	for(int i =0; i < 8; i++) {
 		tmp = tk[i];
-		tk[i] = ROR(tmp,24) & 0xcc000033;
-		tk[i] |= ROR(tmp,8) & 0x33cc0000;
-		tk[i] |= ROR(tmp,26) & 0x00333300;
+		tk[i]  = ROR(tmp, 24) & 0xcc000033;
+		tk[i] |= ROR(tmp,  8) & 0x33cc0000;
+		tk[i] |= ROR(tmp, 26) & 0x00333300;
 		tk[i] |= (tmp & 0x00333300) >> 6;
 	}
 }
@@ -444,11 +445,11 @@ void permute_tk_10(u32* tk) {
 	u32 tmp;
 	for(int i =0; i < 8; i++) {
 		tmp = tk[i];
-		tk[i] = ROR(tmp,8) & 0xcc330000;
-		tk[i] |= ROR(tmp,26) & 0x33000033;
-		tk[i] |= ROR(tmp,22) & 0x00cccc00;
+		tk[i]  = ROR(tmp,  8) & 0xcc330000;
+		tk[i] |= ROR(tmp, 26) & 0x33000033;
+		tk[i] |= ROR(tmp, 22) & 0x00cccc00;
 		tk[i] |= (tmp & 0x00330000) >> 14;
-		tk[i] |= (tmp & 0xcc00) >> 2;
+		tk[i] |= (tmp & 0x0000cc00) >> 2;
 	}
 }
 
@@ -459,10 +460,10 @@ void permute_tk_12(u32* tk) {
 	u32 tmp;
 	for(int i =0; i < 8; i++) {
 		tmp = tk[i];
-		tk[i] = ROR(tmp,8) & 0xcc33;
-		tk[i] |= ROR(tmp,30) & 0x00cc00cc;
-		tk[i] |= ROR(tmp,10) & 0x33330000;
-		tk[i] |= ROR(tmp,16) & 0xcc003300;
+		tk[i]  = ROR(tmp,  8) & 0x0000cc33;
+		tk[i] |= ROR(tmp, 30) & 0x00cc00cc;
+		tk[i] |= ROR(tmp, 10) & 0x33330000;
+		tk[i] |= ROR(tmp, 16) & 0xcc003300;
 	}
 }
 
@@ -473,11 +474,11 @@ void permute_tk_14(u32* tk) {
 	u32 tmp;
 	for(int i =0; i < 8; i++) {
 		tmp = tk[i];
-		tk[i] = ROR(tmp,24) & 0x0033cc00;
-		tk[i] |= ROR(tmp,14) & 0x00cc0000;
-		tk[i] |= ROR(tmp,30) & 0xcc000000;
-		tk[i] |= ROR(tmp,16) & 0x000000ff;
-		tk[i] |= ROR(tmp,18) & 0x33003300;
+		tk[i]  = ROR(tmp, 24) & 0x0033cc00;
+		tk[i] |= ROR(tmp, 14) & 0x00cc0000;
+		tk[i] |= ROR(tmp, 30) & 0xcc000000;
+		tk[i] |= ROR(tmp, 16) & 0x000000ff;
+		tk[i] |= ROR(tmp, 18) & 0x33003300;
 	}
 }
 
@@ -545,29 +546,29 @@ void permute_tk(u32* tk, const u8* tk1_0, const u8* tk1_1, const int rounds) {
 			permute_tk_2(tmp); 				// applies P^2
 		else
 			permute_tk_10(tmp); 			// applies P^10
-		tk[i*8+8] = ROR(tmp[4],26) & 0xc3c3c3c3;
-		tk[i*8+9] = ROR(tmp[7],26) & 0xc3c3c3c3;
-		tk[i*8+10] = ROR(tmp[6],26) & 0xc3c3c3c3;
-		tk[i*8+11] = ROR(tmp[5],26) & 0xc3c3c3c3;
-		tk[i*8+12] = ROR(tmp[1],26) & 0xc3c3c3c3;
-		tk[i*8+13] = ROR(tmp[2],26) & 0xc3c3c3c3;
-		tk[i*8+14] = ROR(tmp[3],26) & 0xc3c3c3c3;
-		tk[i*8+15] = ROR(tmp[0],26) & 0xc3c3c3c3;
-		tk[i*8+16] = ROR(tmp[3],28) & 0x03030303;
+		tk[i*8+ 8]  = ROR(tmp[4],26) & 0xc3c3c3c3;
+		tk[i*8+ 9]  = ROR(tmp[7],26) & 0xc3c3c3c3;
+		tk[i*8+10]  = ROR(tmp[6],26) & 0xc3c3c3c3;
+		tk[i*8+11]  = ROR(tmp[5],26) & 0xc3c3c3c3;
+		tk[i*8+12]  = ROR(tmp[1],26) & 0xc3c3c3c3;
+		tk[i*8+13]  = ROR(tmp[2],26) & 0xc3c3c3c3;
+		tk[i*8+14]  = ROR(tmp[3],26) & 0xc3c3c3c3;
+		tk[i*8+15]  = ROR(tmp[0],26) & 0xc3c3c3c3;
+		tk[i*8+16]  = ROR(tmp[3],28) & 0x03030303;
 		tk[i*8+16] |= ROR(tmp[3],12) & 0x0c0c0c0c;
-		tk[i*8+17] = ROR(tmp[2],28) & 0x03030303;
+		tk[i*8+17]  = ROR(tmp[2],28) & 0x03030303;
 		tk[i*8+17] |= ROR(tmp[2],12) & 0x0c0c0c0c;
-		tk[i*8+18] = ROR(tmp[4],28) & 0x03030303;
+		tk[i*8+18]  = ROR(tmp[4],28) & 0x03030303;
 		tk[i*8+18] |= ROR(tmp[4],12) & 0x0c0c0c0c;
-		tk[i*8+19] = ROR(tmp[7],28) & 0x03030303;
+		tk[i*8+19]  = ROR(tmp[7],28) & 0x03030303;
 		tk[i*8+19] |= ROR(tmp[7],12) & 0x0c0c0c0c;
-		tk[i*8+20] = ROR(tmp[5],28) & 0x03030303;
+		tk[i*8+20]  = ROR(tmp[5],28) & 0x03030303;
 		tk[i*8+20] |= ROR(tmp[5],12) & 0x0c0c0c0c;
-		tk[i*8+21] = ROR(tmp[0],28) & 0x03030303;
+		tk[i*8+21]  = ROR(tmp[0],28) & 0x03030303;
 		tk[i*8+21] |= ROR(tmp[0],12) & 0x0c0c0c0c;
-		tk[i*8+22] = ROR(tmp[1],28) & 0x03030303;
+		tk[i*8+22]  = ROR(tmp[1],28) & 0x03030303;
 		tk[i*8+22] |= ROR(tmp[1],12) & 0x0c0c0c0c;
-		tk[i*8+23] = ROR(tmp[6],28) & 0x03030303;
+		tk[i*8+23]  = ROR(tmp[6],28) & 0x03030303;
 		tk[i*8+23] |= ROR(tmp[6],12) & 0x0c0c0c0c;
 		memcpy(tmp, tk+i*8+24, 32);
 		XOR_BLOCKS(tmp, tk1);
@@ -575,79 +576,79 @@ void permute_tk(u32* tk, const u8* tk1_0, const u8* tk1_1, const int rounds) {
 			permute_tk_4(tmp); 				// applies P^4
 		else
 			permute_tk_12(tmp); 			// applies P^12
-		tk[i*8+24] = ROR(tmp[1],14) & 0x30303030;
-		tk[i*8+24] |= ROR(tmp[1],6) & 0x0c0c0c0c;
-		tk[i*8+25] = ROR(tmp[0],14) & 0x30303030;
-		tk[i*8+25] |= ROR(tmp[0],6) & 0x0c0c0c0c;
-		tk[i*8+26] = ROR(tmp[3],14) & 0x30303030;
-		tk[i*8+26] |= ROR(tmp[3],6) & 0x0c0c0c0c;
-		tk[i*8+27] = ROR(tmp[2],14) & 0x30303030;
-		tk[i*8+27] |= ROR(tmp[2],6) & 0x0c0c0c0c;
-		tk[i*8+28] = ROR(tmp[7],14) & 0x30303030;
-		tk[i*8+28] |= ROR(tmp[7],6) & 0x0c0c0c0c;
-		tk[i*8+29] = ROR(tmp[6],14) & 0x30303030;
-		tk[i*8+29] |= ROR(tmp[6],6) & 0x0c0c0c0c;
-		tk[i*8+30] = ROR(tmp[5],14) & 0x30303030;
-		tk[i*8+30] |= ROR(tmp[5],6) & 0x0c0c0c0c;
-		tk[i*8+31] = ROR(tmp[4],14) & 0x30303030;
-		tk[i*8+31] |= ROR(tmp[4],6) & 0x0c0c0c0c;
-		tk[i*8+32] = ROR(tmp[6],16) & 0xf0f0f0f0;
-		tk[i*8+33] = ROR(tmp[5],16) & 0xf0f0f0f0;
-		tk[i*8+34] = ROR(tmp[0],16) & 0xf0f0f0f0;
-		tk[i*8+35] = ROR(tmp[1],16) & 0xf0f0f0f0;
-		tk[i*8+36] = ROR(tmp[3],16) & 0xf0f0f0f0;
-		tk[i*8+37] = ROR(tmp[7],16) & 0xf0f0f0f0;
-		tk[i*8+38] = ROR(tmp[4],16) & 0xf0f0f0f0;
-		tk[i*8+39] = ROR(tmp[2],16) & 0xf0f0f0f0;
+		tk[i*8+24]  = ROR(tmp[1],14) & 0x30303030;
+		tk[i*8+24] |= ROR(tmp[1], 6) & 0x0c0c0c0c;
+		tk[i*8+25]  = ROR(tmp[0],14) & 0x30303030;
+		tk[i*8+25] |= ROR(tmp[0], 6) & 0x0c0c0c0c;
+		tk[i*8+26]  = ROR(tmp[3],14) & 0x30303030;
+		tk[i*8+26] |= ROR(tmp[3], 6) & 0x0c0c0c0c;
+		tk[i*8+27]  = ROR(tmp[2],14) & 0x30303030;
+		tk[i*8+27] |= ROR(tmp[2], 6) & 0x0c0c0c0c;
+		tk[i*8+28]  = ROR(tmp[7],14) & 0x30303030;
+		tk[i*8+28] |= ROR(tmp[7], 6) & 0x0c0c0c0c;
+		tk[i*8+29]  = ROR(tmp[6],14) & 0x30303030;
+		tk[i*8+29] |= ROR(tmp[6], 6) & 0x0c0c0c0c;
+		tk[i*8+30]  = ROR(tmp[5],14) & 0x30303030;
+		tk[i*8+30] |= ROR(tmp[5], 6) & 0x0c0c0c0c;
+		tk[i*8+31]  = ROR(tmp[4],14) & 0x30303030;
+		tk[i*8+31] |= ROR(tmp[4], 6) & 0x0c0c0c0c;
+		tk[i*8+32]  = ROR(tmp[6],16) & 0xf0f0f0f0;
+		tk[i*8+33]  = ROR(tmp[5],16) & 0xf0f0f0f0;
+		tk[i*8+34]  = ROR(tmp[0],16) & 0xf0f0f0f0;
+		tk[i*8+35]  = ROR(tmp[1],16) & 0xf0f0f0f0;
+		tk[i*8+36]  = ROR(tmp[3],16) & 0xf0f0f0f0;
+		tk[i*8+37]  = ROR(tmp[7],16) & 0xf0f0f0f0;
+		tk[i*8+38]  = ROR(tmp[4],16) & 0xf0f0f0f0;
+		tk[i*8+39]  = ROR(tmp[2],16) & 0xf0f0f0f0;
 		memcpy(tmp, tk+i*8+40, 32);
 		XOR_BLOCKS(tmp, tk1);
 		if (test)
 			permute_tk_6(tmp); 				//	applies P^6
 		else
 			permute_tk_14(tmp); 			// applies P^14
-		tk[i*8+40] = ROR(tmp[4],10) & 0xc3c3c3c3;
-		tk[i*8+41] = ROR(tmp[7],10) & 0xc3c3c3c3;
-		tk[i*8+42] = ROR(tmp[6],10) & 0xc3c3c3c3;
-		tk[i*8+43] = ROR(tmp[5],10) & 0xc3c3c3c3;
-		tk[i*8+44] = ROR(tmp[1],10) & 0xc3c3c3c3;
-		tk[i*8+45] = ROR(tmp[2],10) & 0xc3c3c3c3;
-		tk[i*8+46] = ROR(tmp[3],10) & 0xc3c3c3c3;
-		tk[i*8+47] = ROR(tmp[0],10) & 0xc3c3c3c3;
-		tk[i*8+48] = ROR(tmp[3],12) & 0x03030303;
+		tk[i*8+40]  = ROR(tmp[4],10) & 0xc3c3c3c3;
+		tk[i*8+41]  = ROR(tmp[7],10) & 0xc3c3c3c3;
+		tk[i*8+42]  = ROR(tmp[6],10) & 0xc3c3c3c3;
+		tk[i*8+43]  = ROR(tmp[5],10) & 0xc3c3c3c3;
+		tk[i*8+44]  = ROR(tmp[1],10) & 0xc3c3c3c3;
+		tk[i*8+45]  = ROR(tmp[2],10) & 0xc3c3c3c3;
+		tk[i*8+46]  = ROR(tmp[3],10) & 0xc3c3c3c3;
+		tk[i*8+47]  = ROR(tmp[0],10) & 0xc3c3c3c3;
+		tk[i*8+48]  = ROR(tmp[3],12) & 0x03030303;
 		tk[i*8+48] |= ROR(tmp[3],28) & 0x0c0c0c0c;
-		tk[i*8+49] = ROR(tmp[2],12) & 0x03030303;
+		tk[i*8+49]  = ROR(tmp[2],12) & 0x03030303;
 		tk[i*8+49] |= ROR(tmp[2],28) & 0x0c0c0c0c;
-		tk[i*8+50] = ROR(tmp[4],12) & 0x03030303;
+		tk[i*8+50]  = ROR(tmp[4],12) & 0x03030303;
 		tk[i*8+50] |= ROR(tmp[4],28) & 0x0c0c0c0c;
-		tk[i*8+51] = ROR(tmp[7],12) & 0x03030303;
+		tk[i*8+51]  = ROR(tmp[7],12) & 0x03030303;
 		tk[i*8+51] |= ROR(tmp[7],28) & 0x0c0c0c0c;
-		tk[i*8+52] = ROR(tmp[5],12) & 0x03030303;
+		tk[i*8+52]  = ROR(tmp[5],12) & 0x03030303;
 		tk[i*8+52] |= ROR(tmp[5],28) & 0x0c0c0c0c;
-		tk[i*8+53] = ROR(tmp[0],12) & 0x03030303;
+		tk[i*8+53]  = ROR(tmp[0],12) & 0x03030303;
 		tk[i*8+53] |= ROR(tmp[0],28) & 0x0c0c0c0c;
-		tk[i*8+54] = ROR(tmp[1],12) & 0x03030303;
+		tk[i*8+54]  = ROR(tmp[1],12) & 0x03030303;
 		tk[i*8+54] |= ROR(tmp[1],28) & 0x0c0c0c0c;
-		tk[i*8+55] = ROR(tmp[6],12) & 0x03030303;
+		tk[i*8+55]  = ROR(tmp[6],12) & 0x03030303;
 		tk[i*8+55] |= ROR(tmp[6],28) & 0x0c0c0c0c;
 		memcpy(tmp, tk+i*8+56, 32);
 		XOR_BLOCKS(tmp, tk1);
 		if (test)
 			permute_tk_8(tmp); 				// applies P^8
-		tk[i*8+56] = ROR(tmp[1],30) & 0x30303030;
+		tk[i*8+56]  = ROR(tmp[1],30) & 0x30303030;
 		tk[i*8+56] |= ROR(tmp[1],22) & 0x0c0c0c0c;
-		tk[i*8+57] = ROR(tmp[0],30) & 0x30303030;
+		tk[i*8+57]  = ROR(tmp[0],30) & 0x30303030;
 		tk[i*8+57] |= ROR(tmp[0],22) & 0x0c0c0c0c;
-		tk[i*8+58] = ROR(tmp[3],30) & 0x30303030;
+		tk[i*8+58]  = ROR(tmp[3],30) & 0x30303030;
 		tk[i*8+58] |= ROR(tmp[3],22) & 0x0c0c0c0c;
-		tk[i*8+59] = ROR(tmp[2],30) & 0x30303030;
+		tk[i*8+59]  = ROR(tmp[2],30) & 0x30303030;
 		tk[i*8+59] |= ROR(tmp[2],22) & 0x0c0c0c0c;
-		tk[i*8+60] = ROR(tmp[7],30) & 0x30303030;
+		tk[i*8+60]  = ROR(tmp[7],30) & 0x30303030;
 		tk[i*8+60] |= ROR(tmp[7],22) & 0x0c0c0c0c;
-		tk[i*8+61] = ROR(tmp[6],30) & 0x30303030;
+		tk[i*8+61]  = ROR(tmp[6],30) & 0x30303030;
 		tk[i*8+61] |= ROR(tmp[6],22) & 0x0c0c0c0c;
-		tk[i*8+62] = ROR(tmp[5],30) & 0x30303030;
+		tk[i*8+62]  = ROR(tmp[5],30) & 0x30303030;
 		tk[i*8+62] |= ROR(tmp[5],22) & 0x0c0c0c0c;
-		tk[i*8+63] = ROR(tmp[4],30) & 0x30303030;
+		tk[i*8+63]  = ROR(tmp[4],30) & 0x30303030;
 		tk[i*8+63] |= ROR(tmp[4],22) & 0x0c0c0c0c;
 		if (i+8 < rounds) { 				//only if next loop iteration
 			tk[i*8+64] = tmp[6] & 0xf0f0f0f0; 
