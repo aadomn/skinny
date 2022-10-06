@@ -14,7 +14,7 @@ static void hirose_128_128_256(
   unsigned char g[],
   const unsigned char m[])
 {
-  uint8_t i;
+  uint16_t i;
   uint8_t tmp[BLOCKBYTES];
   uint8_t rtk_23[SKINNY128_384_ROUNDS*BLOCKBYTES/2];
 
